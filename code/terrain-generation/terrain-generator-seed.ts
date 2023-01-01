@@ -5,12 +5,12 @@ import { random, randomInteger } from "../helpers/random.helper";
 // ********************************************************************************************************************
 import { TerrainCellGrid } from "./terrain-cell-grid";
 // ********************************************************************************************************************
-export class TerrainCellGridGeneratorSeed extends Generator<TerrainCellGrid> {
+export class TerrainGeneratorSeed extends Generator<TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly coverage: number = 0.33, public readonly max: number = 1, public readonly min: number = 0.33, public readonly size: number = 8, public readonly edge: number = 1) { super(); }
+    constructor(public readonly size: number = 8, public readonly coverage: number = 0.33, public readonly max: number = 1, public readonly min: number = 0.33, public readonly edge: number = 1) { super(); }
 
     // ****************************************************************************************************************
     // function:    generate
@@ -35,14 +35,11 @@ export class TerrainCellGridGeneratorSeed extends Generator<TerrainCellGrid> {
 
             const tgt = target.get(x, y);
 
-            if (tgt) {
+            if (tgt.height > 0) continue;
 
-                if (tgt.height > 0) continue;
+            tgt.height = random(this.min, this.max);
 
-                tgt.height = random(this.min, this.max);
-
-                pass++;
-            }
+            pass++;
         }
         return target;
     }

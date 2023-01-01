@@ -1,115 +1,91 @@
 // ********************************************************************************************************************
-import { IEquality } from "../shared/equality.interface";
+import { createNoise2D, NoiseFunction2D } from "simplex-noise";
 // ********************************************************************************************************************
-import { Bounds2 } from "./bounds2";
+import { Generator } from "../generators/generator";
 // ********************************************************************************************************************
-export class Array2<_TType extends IEquality<_TType>> {
+import { clampZeroOne } from "../helpers/math.helper";
+// ********************************************************************************************************************
+import { TerrainCellGrid } from "./terrain-cell-grid";
+// ********************************************************************************************************************
+export class TerrainGeneratorSimplex extends Generator<TerrainCellGrid> {
 
     // ****************************************************************************************************************
-    // array - the array
+    // noise - the noise
     // ****************************************************************************************************************
-    protected readonly array: _TType[][] = [];
+    private readonly noise: NoiseFunction2D = createNoise2D();
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly sizeX: number, public readonly sizeY: number) {
-
-        for (var x = 0; x < this.sizeX; x++) {
-
-            this.array[x] = [];
-        }
-    }
+    constructor(public readonly size: number = 512, public readonly divisors: number[] = [64, 256, 512]) { super(); }
 
     // ****************************************************************************************************************
-    // function:    copy
+    // function:    generate
     // ****************************************************************************************************************
-    // parameters:  source - the source
+    // parameters:  n/a
     // ****************************************************************************************************************
-    //              bounds - the bounds
+    // returns:     the target
     // ****************************************************************************************************************
-    // returns:     n/a
-    // ****************************************************************************************************************
-    public copy(source: Array2<_TType>, bounds: Bounds2 | null = null): void {
+    public generate(): TerrainCellGrid {
 
-        if (source) {
+        const target = new TerrainCellGrid(this.size, this.size);
 
-            const x1 = bounds?.min.x ?? 0;
+        for (var x = 0; x < this.size; x++) {
 
-            const x2 = bounds?.max.x ?? this.sizeX - 1;
+            for (var y = 0; y < this.size; y++) {
 
-            const y1 = bounds?.min.y ?? 0;
+                const height = this.getHeight(x, y);
 
-            const y2 = bounds?.max.y ?? this.sizeY - 1;
+                const tgt = target.get(x, y);
 
-            for (var x = x1; x <= x2; x++) {
-
-                for (var y = y1; y <= y2; y++) {
-
-                    const value = source.get(x, y);
-
-                    if (value) this.set(x, y, value);
-                }
+                tgt.height = height;
             }
         }
+        return target;
     }
 
     // ****************************************************************************************************************
-    // function:    get
+    // function:    getHeight
     // ****************************************************************************************************************
     // parameters:  x - the x
     // ****************************************************************************************************************
     //              y - the y
     // ****************************************************************************************************************
-    // returns:     the value
+    // returns:     the height
     // ****************************************************************************************************************
-    public get(x: number, y: number): _TType {
+    private getHeight(x: number, y: number): number {
 
-        if (this.valid(x, y)) {
+        var height = 0;
 
-            return this.array[x][y];
+        if (this.divisors.length) {
+
+            var index = 0;
+
+            for (const divisor of this.divisors) {
+
+                const value = (this.getHeightFor(x, y, divisor) * 0.5) + 0.5;
+
+                height = index++ == 0 ? value : height * value;
+            }
         }
-        return this.array[0][0];
+        return clampZeroOne(height);
     }
 
     // ****************************************************************************************************************
-    // function:    set
+    // function:    getHeightFor
     // ****************************************************************************************************************
     // parameters:  x - the x
     // ****************************************************************************************************************
     //              y - the y
     // ****************************************************************************************************************
-    //              value - the value
+    //              divisor - the divisor
     // ****************************************************************************************************************
-    // returns:     n/a
+    // returns:     the height
     // ****************************************************************************************************************
-    public set(x: number, y: number, value: _TType): void {
+    private getHeightFor(x: number, y: number, divisor: number): number {
 
-        if (this.valid(x, y)) {
+        const result = divisor > 0 ? this.noise(x / divisor, y / divisor) : 0;
 
-            this.array[x][y] = value;
-        }
-    }
-
-    // ****************************************************************************************************************
-    // function:    valid
-    // ****************************************************************************************************************
-    // parameters:  x - the x
-    // ****************************************************************************************************************
-    //              y - the y
-    // ****************************************************************************************************************
-    // returns:     whether valid
-    // ****************************************************************************************************************
-    public valid(x: number, y: number): boolean {
-
-        if (x < 0) return false;
-
-        if (x >= this.sizeX) return false;
-
-        if (y < 0) return false;
-
-        if (y >= this.sizeY) return false;
-
-        return true;
+        return result;
     }
 }

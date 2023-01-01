@@ -1,9 +1,9 @@
 // ********************************************************************************************************************
 import { clampZeroOne } from "../helpers/math.helper";
 // ********************************************************************************************************************
-import { TerrainCellGrid } from "./terrain-cell-grid";
+import { TerrainHeights } from "../terrain/terrain-heights";
 // ********************************************************************************************************************
-import { TerrainHeights } from "./terrain-heights";
+import { TerrainCellGrid } from "./terrain-cell-grid";
 // ********************************************************************************************************************
 export class TerrainCellGridHeights extends TerrainHeights {
 
@@ -24,9 +24,9 @@ export class TerrainCellGridHeights extends TerrainHeights {
 
         super(0, 0, 0);
 
-        this.offsetX = grid.sizeX / 2;
+        this.offsetX = grid.sizeX >> 1;
 
-        this.offsetY = grid.sizeY / 2;
+        this.offsetY = grid.sizeY >> 1;
     }
 
     // ****************************************************************************************************************
@@ -40,8 +40,16 @@ export class TerrainCellGridHeights extends TerrainHeights {
     // ****************************************************************************************************************
     public getHeight(x: number, y: number): number {
 
-        const cell = this.grid.get(x + this.offsetX, y + this.offsetY);
+        const ox = x + this.offsetX;
 
-        return clampZeroOne(cell?.height ?? 0);
+        const oy = y + this.offsetY;
+
+        if (this.grid.valid(ox, oy)) {
+
+            const cell = this.grid.get(ox, oy);
+
+            return clampZeroOne(cell?.height ?? 0);
+        }
+        return 0;
     }
 }

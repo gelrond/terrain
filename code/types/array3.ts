@@ -118,7 +118,7 @@ export class Array3<_TType extends IEquality<_TType>> {
     // ****************************************************************************************************************
     // returns:     whether valid
     // ****************************************************************************************************************
-    private valid(x: number, y: number, z: number): boolean {
+    public valid(x: number, y: number, z: number): boolean {
 
         if (x < 0) return false;
 

@@ -7,10 +7,13 @@ import { FogExp2 } from 'three';
 // ********************************************************************************************************************
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // ********************************************************************************************************************
-import { TerrainCellGridGeneratorSeed } from './code/terrain/terrain-cell-grid-generator-seed';
+// import { TerrainGeneratorSeed } from './code/terrain-generation/terrain-generator-seed';
 // ********************************************************************************************************************
-import { TerrainCellGridHeights } from './code/terrain/terrain-cell-grid-heights';
-import { TerrainCellGridModifierUpscale } from './code/terrain/terrain-cell-grid-modifier-upscale';
+import { TerrainCellGridHeights } from './code/terrain-generation/terrain-cell-grid-heights';
+// ********************************************************************************************************************
+import { TerrainGeneratorSimplex } from './code/terrain-generation/terrain-generator-simplex';
+// ********************************************************************************************************************
+// import { TerrainModifierUpscale } from './code/terrain-generation/terrain-modifier-upscale';
 // ********************************************************************************************************************
 // import { TerrainHeights } from './code/terrain/terrain-heights';
 // ********************************************************************************************************************
@@ -63,16 +66,17 @@ ocean.position.y = 16;
 
 // ********************************************************************************************************************
 
-var grid = new TerrainCellGridGeneratorSeed().generate();
-grid = new TerrainCellGridModifierUpscale().modify(grid);
-grid = new TerrainCellGridModifierUpscale().modify(grid);
-grid = new TerrainCellGridModifierUpscale().modify(grid);
-grid = new TerrainCellGridModifierUpscale().modify(grid);
-grid = new TerrainCellGridModifierUpscale().modify(grid);
-
+var grid = new TerrainGeneratorSimplex().generate();
+/*
+grid = new TerrainModifierUpscale().modify(grid);
+grid = new TerrainModifierUpscale().modify(grid);
+grid = new TerrainModifierUpscale().modify(grid);
+grid = new TerrainModifierUpscale().modify(grid);
+grid = new TerrainModifierUpscale().modify(grid);
+*/
 const heights = new TerrainCellGridHeights(grid);
 
-const patches = new TerrainPatchGrid(10, 32, 32);
+const patches = new TerrainPatchGrid(16, 32, 64);
 
 patches.create(scene, heights);
 

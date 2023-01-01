@@ -3,7 +3,7 @@ import { Modifier } from "../modifiers/modifier";
 // ********************************************************************************************************************
 import { TerrainCellGrid } from "./terrain-cell-grid";
 // ********************************************************************************************************************
-export class TerrainCellGridModifierUpscale extends Modifier<TerrainCellGrid, TerrainCellGrid> {
+export class TerrainModifierUpscale extends Modifier<TerrainCellGrid, TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // constructor
