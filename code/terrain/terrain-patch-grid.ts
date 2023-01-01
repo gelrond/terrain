@@ -109,9 +109,7 @@ export class TerrainPatchGrid {
 
                 const patch = patches[x][y];
 
-                const normalMap = patch.createNormalMap();
-
-                const material = new MeshStandardMaterial({ color: '#33a063', roughness: 1.0, normalMap: normalMap, normalScale: new Vector2(2, 2), wireframe: true })
+                const material = new MeshStandardMaterial({ color: '#33a063', roughness: 1.0, wireframe: false })
 
                 const geometry = patch.createGeometry(this.ceiling);
 
