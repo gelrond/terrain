@@ -10,7 +10,7 @@ export class TerrainGeneratorSeed extends Generator<TerrainCellGrid> {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly size: number = 8, public readonly coverage: number = 0.33, public readonly max: number = 1, public readonly min: number = 0.33, public readonly edge: number = 1) { super(); }
+    constructor(public readonly size: number = 8, public readonly coverage: number = 0.75, public readonly max: number = 1, public readonly min: number = 0.33, public readonly edge: number = 1) { super(); }
 
     // ****************************************************************************************************************
     // function:    generate

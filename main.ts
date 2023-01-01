@@ -6,6 +6,10 @@ import * as THREE from 'three';
 import { FogExp2 } from 'three';
 // ********************************************************************************************************************
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TerrainCellGridHeights } from './code/terrain-generation/terrain-cell-grid-heights';
+import { TerrainGeneratorSeed } from './code/terrain-generation/terrain-generator-seed';
+import { TerrainModifierSmooth } from './code/terrain-generation/terrain-modifier-smooth';
+import { TerrainModifierUpscale } from './code/terrain-generation/terrain-modifier-upscale';
 // ********************************************************************************************************************
 import { TerrainHeights } from './code/terrain/terrain-heights';
 // ********************************************************************************************************************
@@ -24,7 +28,7 @@ const scene = new THREE.Scene();
 
 scene.background = new THREE.Color('#333333');
 
-scene.fog = new FogExp2('#a0a0a0', 0.002)
+scene.fog = new FogExp2('#a0a0a0', 0.001)
 
 const renderer = new THREE.WebGLRenderer();
 
@@ -61,12 +65,36 @@ var oceanPass = 0;
 
 ocean.position.y = 8;
 
-scene.add(ocean);
+// scene.add(ocean);
+
+// ********************************************************************************************************************
+// terrain generation
+// ********************************************************************************************************************
+var terrainGrid = new TerrainGeneratorSeed().generate();
+
+terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierSmooth().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierSmooth().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierSmooth().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
 
 // ********************************************************************************************************************
 // terrain
 // ********************************************************************************************************************
-const terrainHeights = new TerrainHeights();
+
+const terrainHeights = new TerrainCellGridHeights(terrainGrid);
 
 const terrain = new TerrainPatchGrid(16, 32, 64);
 
