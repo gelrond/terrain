@@ -1,30 +1,38 @@
 // ********************************************************************************************************************
-import { List } from './list';
-import { Vector2 } from './vector2';
+import { Array2 } from "../types/array2";
+import { TerrainCell } from "./terrain-cell";
 // ********************************************************************************************************************
-export class Vector2List extends List<Vector2> {
+export class TerrainCellGrid extends Array2<TerrainCell> {
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(vectors: Vector2[] = []) { super(vectors); }
+    constructor(sizeX: number, sizeY: number) {
+
+        super(sizeX, sizeY);
+
+        for (var x = 0; x < this.sizeX; x++) {
+
+            for (var y = 0; y < this.sizeY; y++) {
+
+                this.set(x, y, new TerrainCell(0));
+            }
+        }
+    }
 
     // ****************************************************************************************************************
-    // function:    sortByDistance
+    // function:    clone
     // ****************************************************************************************************************
-    // parameters:  origin - the origin
+    // parameters:  n/a
     // ****************************************************************************************************************
-    // returns:     n/a
+    // returns:     the clone
     // ****************************************************************************************************************
-    public sortByDistance(origin: Vector2): void {
+    public clone(): TerrainCellGrid {
 
-        this.array.sort((vector1, vector2) => {
+        const clone = new TerrainCellGrid(this.sizeX, this.sizeY);
 
-            const distance1 = vector1.distanceTo(origin);
+        clone.copy(this);
 
-            const distance2 = vector2.distanceTo(origin);
-
-            return distance1 - distance2;
-        })
+        return clone;
     }
 }

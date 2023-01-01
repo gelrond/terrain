@@ -1,39 +1,40 @@
 // ********************************************************************************************************************
-import { Array2 } from "../types/array2";
+import { Modifier } from "../modifiers/modifier";
+import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
 // ********************************************************************************************************************
-import { TerrainCell } from "./terrain-cell";
-// ********************************************************************************************************************
-export class TerrainCellGrid extends Array2<TerrainCell> {
+export class TerrainUpscaleModifier extends Modifier<TerrainCellGrid, TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(sizeX: number, sizeY: number) {
+    constructor() { super(); }
 
-        super(sizeX, sizeY);
+    // ****************************************************************************************************************
+    // function:    modify
+    // ****************************************************************************************************************
+    // parameters:  source - the source
+    // ****************************************************************************************************************
+    // returns:     the target
+    // ****************************************************************************************************************
+    public modify(source: TerrainCellGrid): TerrainCellGrid {
 
-        for (var x = 0; x < this.sizeX; x++) {
+        const tx = source.sizeX << 1;
 
-            for (var y = 0; y < this.sizeY; y++) {
+        const ty = source.sizeY << 1;
 
-                this.set(x, y, new TerrainCell(0));
+        const target = new TerrainCellGrid(tx, ty);
+
+        for (var x = 0; x < tx; x++) {
+
+            for (var y = 0; y < ty; y++) {
+
+                const src = source.get(x >> 1, y >> 1);
+
+                const tgt = target.get(x, y);
+
+                tgt.height = src.height;
             }
         }
-    }
-
-    // ****************************************************************************************************************
-    // function:    clone
-    // ****************************************************************************************************************
-    // parameters:  n/a
-    // ****************************************************************************************************************
-    // returns:     the clone
-    // ****************************************************************************************************************
-    public clone(): TerrainCellGrid {
-
-        const clone = new TerrainCellGrid(this.sizeX, this.sizeY);
-
-        clone.copy(this);
-
-        return clone;
+        return target;
     }
 }

@@ -1,13 +1,10 @@
 // ********************************************************************************************************************
 import { createNoise2D, NoiseFunction2D } from "simplex-noise";
-// ********************************************************************************************************************
 import { Generator } from "../generators/generator";
-// ********************************************************************************************************************
 import { clampZeroOne } from "../helpers/math.helper";
+import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
 // ********************************************************************************************************************
-import { TerrainCellGrid } from "./terrain-cell-grid";
-// ********************************************************************************************************************
-export class TerrainGeneratorSimplex extends Generator<TerrainCellGrid> {
+export class TerrainSimplexGenerator extends Generator<TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // noise - the noise
@@ -34,11 +31,9 @@ export class TerrainGeneratorSimplex extends Generator<TerrainCellGrid> {
 
             for (var y = 0; y < this.size; y++) {
 
-                const height = this.getHeight(x, y);
-
                 const tgt = target.get(x, y);
 
-                tgt.height = height;
+                tgt.height = this.getHeight(x, y);
             }
         }
         return target;
