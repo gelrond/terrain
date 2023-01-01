@@ -1,0 +1,6 @@
+﻿# .npmignore
+node_modules
+.vs
+compiler*.*
+web.config
+*.sln
