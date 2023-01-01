@@ -52,7 +52,9 @@ export class TerrainSimplexGenerator extends Generator<TerrainCellGrid> {
 
         var height = 0;
 
-        for (const divisor of this.divisors) {
+        for (var i = 0; i < this.divisors.length; i++) {
+
+            const divisor = this.divisors[i];
 
             const value = this.getHeightFor(x, y, divisor);
 

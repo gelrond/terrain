@@ -2,7 +2,6 @@
 import { BufferGeometry, Material, MeshStandardMaterial, Vector3 } from 'three';
 import { GeometryBuilder } from '../geometry/geometry-builder';
 import { GeometryData } from '../geometry/geometry-data';
-import { max } from '../helpers/math.helper';
 import { IEquality } from '../shared/equality.interface';
 import { Bounds2 } from '../types/bounds2';
 import { Vector2 } from '../types/vector2';
@@ -89,7 +88,9 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
         if (this.children.length) {
 
-            for (const child of this.children) {
+            for (var i = 0; i < this.children.length; i++) {
+
+                const child = this.children[i];
 
                 child.createGeometryInternal(builder, rootNw, rootDx, rootDy, ceiling);
             }
@@ -211,7 +212,9 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
         if (this.root) {
 
-            for (const point of points) {
+            for (var i = 0; i < points.length; i++) {
+
+                const point = points[i];
 
                 // ****************************************************************************************************
                 // obtain uvs
@@ -268,7 +271,9 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
             if (this.children.length) {
 
-                for (const child of this.children) {
+                for (var i = 0; i < this.children.length; i++) {
+
+                    const child = this.children[i];
 
                     child.findPoints(points, bounds);
                 }
