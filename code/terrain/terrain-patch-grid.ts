@@ -1,5 +1,5 @@
 // ********************************************************************************************************************
-import { Mesh, MeshStandardMaterial, Scene } from 'three';
+import { Mesh, Scene } from 'three';
 // ********************************************************************************************************************
 import { Vector2 } from '../types/vector2';
 // ********************************************************************************************************************
@@ -26,7 +26,7 @@ export class TerrainPatchGrid {
     public create(scene: Scene, heights: ITerrainHeights): void {
 
         // ************************************************************************************************************
-        // setup process
+        // setup variables
         // ************************************************************************************************************
 
         const patchSizeHalf = this.patchSize >> 1;
@@ -38,7 +38,7 @@ export class TerrainPatchGrid {
         const patches: TerrainPatch[][] = [];
 
         // ************************************************************************************************************
-        // setup patches
+        // traverse grid
         // ************************************************************************************************************
 
         for (var x = 0; x < this.patchesPerSide; x++) {
@@ -48,27 +48,27 @@ export class TerrainPatchGrid {
             for (var y = 0; y < this.patchesPerSide; y++) {
 
                 // ****************************************************************************************************
-                // obtain center
+                // obtain origin
                 // ****************************************************************************************************
 
-                const cx = (x * this.patchSize) - totalSizeHalf;
+                const ox = (x * this.patchSize) - totalSizeHalf;
 
-                const cy = (y * this.patchSize) - totalSizeHalf;
+                const oy = (y * this.patchSize) - totalSizeHalf;
 
                 // ****************************************************************************************************
                 // obtain points
                 // ****************************************************************************************************
 
-                const pointNw = new Vector2(cx - patchSizeHalf, cy - patchSizeHalf);
+                const pointNw = new Vector2(ox - patchSizeHalf, oy - patchSizeHalf);
 
-                const pointNe = new Vector2(cx + patchSizeHalf, cy - patchSizeHalf);
+                const pointNe = new Vector2(ox + patchSizeHalf, oy - patchSizeHalf);
 
-                const pointSw = new Vector2(cx - patchSizeHalf, cy + patchSizeHalf);
+                const pointSw = new Vector2(ox - patchSizeHalf, oy + patchSizeHalf);
 
-                const pointSe = new Vector2(cx + patchSizeHalf, cy + patchSizeHalf);
+                const pointSe = new Vector2(ox + patchSizeHalf, oy + patchSizeHalf);
 
                 // ****************************************************************************************************
-                // obtain patch
+                // create patch
                 // ****************************************************************************************************
 
                 patches[x][y] = new TerrainPatch(pointNw, pointNe, pointSw, pointSe, heights);
@@ -109,7 +109,7 @@ export class TerrainPatchGrid {
 
                 const patch = patches[x][y];
 
-                const material = new MeshStandardMaterial({ color: '#33a063', roughness: 1.0, wireframe: false })
+                const material = patch.createMaterial();
 
                 const geometry = patch.createGeometry(this.ceiling);
 

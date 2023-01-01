@@ -40,9 +40,9 @@ export class TerrainCellGridHeights extends TerrainHeights {
     // ****************************************************************************************************************
     public getHeight(x: number, y: number): number {
 
-        const ox = x + this.offsetX;
+        const ox = this.offsetX + x;
 
-        const oy = y + this.offsetY;
+        const oy = this.offsetY + y;
 
         if (this.grid.valid(ox, oy)) {
 

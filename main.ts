@@ -7,21 +7,19 @@ import { FogExp2 } from 'three';
 // ********************************************************************************************************************
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // ********************************************************************************************************************
-import { TerrainGeneratorSeed } from './code/terrain-generation/terrain-generator-seed';
-// ********************************************************************************************************************
-import { TerrainCellGridHeights } from './code/terrain-generation/terrain-cell-grid-heights';
-// ********************************************************************************************************************
-// import { TerrainGeneratorSimplex } from './code/terrain-generation/terrain-generator-simplex';
-// ********************************************************************************************************************
-import { TerrainModifierUpscale } from './code/terrain-generation/terrain-modifier-upscale';
-// ********************************************************************************************************************
-// import { TerrainHeights } from './code/terrain/terrain-heights';
+import { TerrainHeights } from './code/terrain/terrain-heights';
 // ********************************************************************************************************************
 import { TerrainPatchGrid } from './code/terrain/terrain-patch-grid';
 // ********************************************************************************************************************
 
 // ********************************************************************************************************************
+// noise
+// ********************************************************************************************************************
+const noise: NoiseFunction3D = createNoise3D();
 
+// ********************************************************************************************************************
+// scene & renderer
+// ********************************************************************************************************************
 const scene = new THREE.Scene();
 
 scene.background = new THREE.Color('#333333');
@@ -30,12 +28,9 @@ scene.fog = new FogExp2('#a0a0a0', 0.002)
 
 const renderer = new THREE.WebGLRenderer();
 
-// const grid = new THREE.GridHelper(512, 256, new THREE.Color('#333344'), new THREE.Color('#111111'));
-
-// scene.add(grid);
-
 // ********************************************************************************************************************
-
+// camera
+// ********************************************************************************************************************
 const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 2000);
 
 camera.position.y = 200; camera.position.z = 256;
@@ -43,7 +38,8 @@ camera.position.y = 200; camera.position.z = 256;
 new OrbitControls(camera, renderer.domElement);
 
 // ********************************************************************************************************************
-
+// lighting
+// ********************************************************************************************************************
 const sun = new THREE.DirectionalLight('#f0f0e0', 1.0);
 
 sun.position.z = -100; sun.position.y = 64;
@@ -51,38 +47,30 @@ sun.position.z = -100; sun.position.y = 64;
 scene.add(sun);
 
 // ********************************************************************************************************************
+// ocean
+// ********************************************************************************************************************
+const oceanGeometry = new THREE.PlaneGeometry(512, 512, 256, 256);
 
-const ocean_g = new THREE.PlaneGeometry(512, 512, 256, 256);
+oceanGeometry.rotateX(THREE.MathUtils.degToRad(-90));
 
-ocean_g.rotateX(THREE.MathUtils.degToRad(-90));
+const oceanMaterial = new THREE.MeshStandardMaterial({ color: '#3366a0', roughness: 1.0, metalness: 0, wireframe: true });
 
-const ocean_m = new THREE.MeshStandardMaterial({ color: '#3366a0', roughness: 0.0, metalness: 0, wireframe: true });
+const ocean = new THREE.Mesh(oceanGeometry, oceanMaterial);
 
-const ocean = new THREE.Mesh(ocean_g, ocean_m);
+var oceanPass = 0;
 
-ocean.position.y = 16;
+ocean.position.y = 8;
 
-// scene.add(ocean);
+scene.add(ocean);
 
 // ********************************************************************************************************************
+// terrain
+// ********************************************************************************************************************
+const terrainHeights = new TerrainHeights();
 
-var grid = new TerrainGeneratorSeed().generate();
+const terrain = new TerrainPatchGrid(16, 32, 64);
 
-grid = new TerrainModifierUpscale().modify(grid);
-
-grid = new TerrainModifierUpscale().modify(grid);
-
-grid = new TerrainModifierUpscale().modify(grid);
-
-grid = new TerrainModifierUpscale().modify(grid);
-
-grid = new TerrainModifierUpscale().modify(grid);
-
-const heights = new TerrainCellGridHeights(grid);
-
-const patches = new TerrainPatchGrid(16, 32, 64);
-
-patches.create(scene, heights);
+terrain.create(scene, terrainHeights);
 
 // ********************************************************************************************************************
 // initialise
@@ -97,6 +85,7 @@ function initialise() {
 
     update();
 }
+
 // ********************************************************************************************************************
 // resize
 // ********************************************************************************************************************
@@ -106,6 +95,7 @@ function resize() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
 // ********************************************************************************************************************
 // update
 // ********************************************************************************************************************
@@ -117,35 +107,32 @@ function update() {
 
     updateOcean();
 }
+
 // ********************************************************************************************************************
 // updateOcean
 // ********************************************************************************************************************
-var pass = 0;
-const noise: NoiseFunction3D = createNoise3D();
-// ********************************************************************************************************************
 function updateOcean() {
 
-    const positions = ocean_g.getAttribute('position');
+    const positions = oceanGeometry.getAttribute('position');
 
-    for (var c = 0; c < positions.count; c++) {
+    for (var i = 0; i < positions.count; i++) {
 
-        const x = positions.getX(c);
+        const x = positions.getX(i);
 
-        const y = positions.getZ(c);
+        const z = positions.getZ(i);
 
-        const n1 = noise(x / 4, y / 4, pass) * 0.1;
+        const noise1 = noise(x / 4, z / 4, oceanPass) * 0.1;
 
-        const n2 = noise(x / 32, y / 32, pass) * 0.1;
+        const noise2 = noise(x / 32, z / 32, oceanPass) * 0.1;
 
-        const he = (n1 + n2) * 4;
+        const height = (noise1 + noise2) * 4;
 
-        positions.setY(c, he);
+        positions.setY(i, height);
     }
-    pass += 0.005;
+    oceanPass += 0.005;
 
-    ocean_g.computeVertexNormals();
+    oceanGeometry.computeVertexNormals();
 
-    ocean_g.attributes.position.needsUpdate = true;
-
+    oceanGeometry.attributes.position.needsUpdate = true;
 }
 initialise();

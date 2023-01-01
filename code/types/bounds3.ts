@@ -17,7 +17,7 @@ export class Bounds3 extends THREE.Box3 implements IEquality<Bounds3> {
     // ****************************************************************************************************************
     // parameters:  vector - the vector
     // ****************************************************************************************************************
-    // returns:     whether inside or on edge
+    // returns:     whether inside or on the edge
     // ****************************************************************************************************************
     public insideOrOnEdge(vector: Vector3): boolean {
 

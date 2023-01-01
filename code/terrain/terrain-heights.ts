@@ -19,7 +19,7 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(private divisor1: number = 32, private divisor2: number = 256, private divisor3: number = 512) { }
+    constructor(private divisor1: number = 64, private divisor2: number = 256, private divisor3: number = 512) { }
 
     // ****************************************************************************************************************
     // function:    getHeight
@@ -32,13 +32,13 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     public getHeight(x: number, y: number): number {
 
-        const noise1 = this.noise(x / this.divisor1, y / this.divisor1);
+        const noise1 = (this.noise(x / this.divisor1, y / this.divisor1) * 0.5) + 0.5;
 
-        const noise2 = this.noise(x / this.divisor2, y / this.divisor2);
+        const noise2 = (this.noise(x / this.divisor2, y / this.divisor2) * 0.5) + 0.5;
 
-        const noise3 = this.noise(x / this.divisor3, y / this.divisor3);
+        const noise3 = (this.noise(x / this.divisor3, y / this.divisor3) * 0.5) + 0.5;
 
-        return clampZeroOne(((noise1 * noise2 * noise3) * 0.5) + 0.5);
+        return clampZeroOne(noise1 * noise2 * noise3);
     }
 
     // ****************************************************************************************************************
@@ -57,7 +57,7 @@ export class TerrainHeights implements ITerrainHeights {
     public getVariance(x1: number, y1: number, x2: number, y2: number): ITerrainVariance | null {
 
         // ************************************************************************************************************
-        // setup process
+        // setup variables
         // ************************************************************************************************************
 
         const dx = abs(x2 - x1); if (dx <= 1) return null;

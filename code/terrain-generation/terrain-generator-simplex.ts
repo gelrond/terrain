@@ -59,13 +59,11 @@ export class TerrainGeneratorSimplex extends Generator<TerrainCellGrid> {
 
         if (this.divisors.length) {
 
-            var index = 0;
-
             for (const divisor of this.divisors) {
 
-                const value = (this.getHeightFor(x, y, divisor) * 0.5) + 0.5;
+                const value = this.getHeightFor(x, y, divisor);
 
-                height = index++ == 0 ? value : height * value;
+                height = height ?? height * value;
             }
         }
         return clampZeroOne(height);
@@ -84,7 +82,7 @@ export class TerrainGeneratorSimplex extends Generator<TerrainCellGrid> {
     // ****************************************************************************************************************
     private getHeightFor(x: number, y: number, divisor: number): number {
 
-        const result = divisor > 0 ? this.noise(x / divisor, y / divisor) : 0;
+        const result = divisor > 0 ? ((this.noise(x / divisor, y / divisor) * 0.5) + 0.5) : 0;
 
         return result;
     }

@@ -63,7 +63,7 @@ export class List<_TType extends IEquality<_TType>> {
     // ****************************************************************************************************************
     // parameters:  value - the value
     // ****************************************************************************************************************
-    // returns:     whether the value has been added
+    // returns:     whether the value is contained in the list
     // ****************************************************************************************************************
     public contains(value: _TType): boolean {
 
@@ -77,7 +77,7 @@ export class List<_TType extends IEquality<_TType>> {
     // ****************************************************************************************************************
     // parameters:  value - the value
     // ****************************************************************************************************************
-    // returns:     whether the value is not found
+    // returns:     whether the value is not contained in the list
     // ****************************************************************************************************************
     public doesNotContain(value: _TType): boolean {
 
@@ -89,7 +89,7 @@ export class List<_TType extends IEquality<_TType>> {
     // ****************************************************************************************************************
     // parameters:  predicate - the predicate
     // ****************************************************************************************************************
-    // returns:     the value found or null
+    // returns:     the value or null
     // ****************************************************************************************************************
     public find(predicate: (value: _TType, index: number, obj: _TType[]) => unknown): _TType | null {
 
@@ -103,7 +103,7 @@ export class List<_TType extends IEquality<_TType>> {
     // ****************************************************************************************************************
     // parameters:  value - the value
     // ****************************************************************************************************************
-    // returns:     the index or -1
+    // returns:     the index or -1 if not found
     // ****************************************************************************************************************
     public indexOf(value: _TType): number {
 
