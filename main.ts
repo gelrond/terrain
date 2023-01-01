@@ -8,6 +8,7 @@ import { TerrainSeedGenerator } from './code/terrain-generation/terrain-seed-gen
 import { TerrainShiftModifier } from './code/terrain-generation/terrain-shift-modifier';
 import { TerrainSmoothModifier } from './code/terrain-generation/terrain-smooth-modifier';
 import { TerrainUpscaleModifier } from './code/terrain-generation/terrain-upscale-modifier';
+import { TerrainHeights } from './code/terrain/terrain-heights';
 import { TerrainPatchGrid } from './code/terrain/terrain-patch-grid';
 // ********************************************************************************************************************
 
@@ -48,11 +49,12 @@ scene.add(sun);
 // ********************************************************************************************************************
 // ocean
 // ********************************************************************************************************************
+/*
 const oceanGeometry = new THREE.PlaneGeometry(512, 512, 256, 256);
 
 oceanGeometry.rotateX(THREE.MathUtils.degToRad(-90));
 
-const oceanMaterial = new THREE.MeshStandardMaterial({ color: '#3366a0', roughness: 1.0, metalness: 0, wireframe: true });
+const oceanMaterial = new THREE.MeshStandardMaterial({ color: '#3366a0', roughness: 0.5, metalness: 0, wireframe: false });
 
 const ocean = new THREE.Mesh(oceanGeometry, oceanMaterial);
 
@@ -60,11 +62,12 @@ var oceanPass = 0;
 
 ocean.position.y = 8;
 
-// scene.add(ocean);
-
+scene.add(ocean);
+*/
 // ********************************************************************************************************************
 // terrain generation
 // ********************************************************************************************************************
+
 var terrainGrid = new TerrainSeedGenerator().generate();
 
 while (terrainGrid.sizeX < 512) {
@@ -80,6 +83,8 @@ terrainGrid = new TerrainSmoothModifier().modify(terrainGrid);
 // ********************************************************************************************************************
 
 const terrainHeights = new TerrainCellGridHeights(terrainGrid);
+
+//const terrainHeights = new TerrainHeights();
 
 const terrain = new TerrainPatchGrid(32, 32, 50);
 
@@ -118,12 +123,13 @@ function update() {
 
     renderer.render(scene, camera);
 
-    updateOcean();
+    // updateOcean();
 }
 
 // ********************************************************************************************************************
 // updateOcean
 // ********************************************************************************************************************
+/*
 function updateOcean() {
 
     const positions = oceanGeometry.getAttribute('position');
@@ -148,4 +154,5 @@ function updateOcean() {
 
     oceanGeometry.attributes.position.needsUpdate = true;
 }
+*/
 initialise();

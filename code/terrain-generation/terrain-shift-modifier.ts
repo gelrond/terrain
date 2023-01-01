@@ -67,14 +67,15 @@ export class TerrainShiftModifier extends Modifier<TerrainCellGrid, TerrainCellG
                     if (direction == 7) src = source.get(x, y + 1);
 
                     if (direction == 8) src = source.get(x + 1, y + 1);
-                }
-                if (src.height < tgt.height) {
 
-                    var minimum = min(src.height, tgt.height);
+                    if (src.height < tgt.height) {
 
-                    var maximum = max(src.height, tgt.height);
+                        var minimum = min(src.height, tgt.height);
 
-                    tgt.height = random(minimum, maximum);
+                        var maximum = max(src.height, tgt.height);
+
+                        tgt.height = random(minimum, maximum);
+                    }
                 }
             }
         }

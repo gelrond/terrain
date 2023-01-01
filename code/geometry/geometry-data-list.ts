@@ -23,9 +23,11 @@ export class GeometryDataList extends List<GeometryData> {
 
         const colours = [];
 
-        for (const data of this.array) {
+        for (var i = 0; i < this.array.length; i++) {
 
-            if (data.colour) colours.push(data.colour);
+            var element = this.array[i];
+
+            if (element.colour) colours.push(element.colour);
         }
         return colours;
     }
@@ -41,9 +43,13 @@ export class GeometryDataList extends List<GeometryData> {
 
         const colours: number[] = [];
 
-        for (const colour of this.getColours()) {
+        const elements = this.getColours();
 
-            colours.push(...[colour.r, colour.g, colour.b]);
+        for (var i = 0; i < elements.length; i++) {
+
+            var element = elements[i];
+
+            colours.push(...[element.r, element.g, element.b]);
         }
         return new Float32Array(colours);
     }
@@ -59,9 +65,11 @@ export class GeometryDataList extends List<GeometryData> {
 
         const normals = [];
 
-        for (const data of this.array) {
+        for (var i = 0; i < this.array.length; i++) {
 
-            if (data.normal) normals.push(data.normal);
+            var element = this.array[i];
+
+            if (element.normal) normals.push(element.normal);
         }
         return normals;
     }
@@ -77,9 +85,13 @@ export class GeometryDataList extends List<GeometryData> {
 
         const normals: number[] = [];
 
-        for (const normal of this.getNormals()) {
+        const elements = this.getNormals();
 
-            normals.push(...[normal.x, normal.y, normal.z]);
+        for (var i = 0; i < elements.length; i++) {
+
+            var element = elements[i];
+
+            normals.push(...[element.x, element.y, element.z]);
         }
         return new Float32Array(normals);
     }
@@ -95,9 +107,11 @@ export class GeometryDataList extends List<GeometryData> {
 
         const positions = [];
 
-        for (const data of this.array) {
+        for (var i = 0; i < this.array.length; i++) {
 
-            if (data.position) positions.push(data.position);
+            var element = this.array[i];
+
+            if (element.position) positions.push(element.position);
         }
         return positions;
     }
@@ -113,9 +127,13 @@ export class GeometryDataList extends List<GeometryData> {
 
         const positions: number[] = [];
 
-        for (const position of this.getPositions()) {
+        const elements = this.getPositions();
 
-            positions.push(...[position.x, position.y, position.z]);
+        for (var i = 0; i < elements.length; i++) {
+
+            var element = elements[i];
+
+            positions.push(...[element.x, element.y, element.z]);
         }
         return new Float32Array(positions);
     }
@@ -131,9 +149,11 @@ export class GeometryDataList extends List<GeometryData> {
 
         const uvs = [];
 
-        for (const data of this.array) {
+        for (var i = 0; i < this.array.length; i++) {
 
-            if (data.uv) uvs.push(data.uv);
+            var element = this.array[i];
+
+            if (element.uv) uvs.push(element.uv);
         }
         return uvs;
     }
@@ -149,9 +169,13 @@ export class GeometryDataList extends List<GeometryData> {
 
         const uvs: number[] = [];
 
-        for (const uv of this.getUvs()) {
+        const elements = this.getUvs();
 
-            uvs.push(...[uv.x, uv.y]);
+        for (var i = 0; i < elements.length; i++) {
+
+            var element = elements[i];
+
+            uvs.push(...[element.x, element.y]);
         }
         return new Float32Array(uvs);
     }
@@ -165,13 +189,15 @@ export class GeometryDataList extends List<GeometryData> {
     // ****************************************************************************************************************
     public getUv2s(): Vector2[] {
 
-        const uv2s = [];
+        const uvs = [];
 
-        for (const data of this.array) {
+        for (var i = 0; i < this.array.length; i++) {
 
-            if (data.uv2) uv2s.push(data.uv2);
+            var element = this.array[i];
+
+            if (element.uv2) uvs.push(element.uv2);
         }
-        return uv2s;
+        return uvs;
     }
 
     // ****************************************************************************************************************
@@ -183,12 +209,16 @@ export class GeometryDataList extends List<GeometryData> {
     // ****************************************************************************************************************
     public getUv2sArray(): Float32Array {
 
-        const uv2s: number[] = [];
+        const uvs: number[] = [];
 
-        for (const uv2 of this.getUv2s()) {
+        const elements = this.getUv2s();
 
-            uv2s.push(...[uv2.x, uv2.y]);
+        for (var i = 0; i < elements.length; i++) {
+
+            var element = elements[i];
+
+            uvs.push(...[element.x, element.y]);
         }
-        return new Float32Array(uv2s);
+        return new Float32Array(uvs);
     }
 }

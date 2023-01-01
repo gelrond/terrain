@@ -48,7 +48,9 @@ export class List<_TType extends IEquality<_TType>> {
 
         if (values) {
 
-            for (const value of values) {
+            for (var i = 0; i < values.length; i++) {
+
+                const value = values[i];
 
                 const index = this.add(value, duplicatesAllowed);
 
@@ -109,9 +111,12 @@ export class List<_TType extends IEquality<_TType>> {
 
         if (value) {
 
-            const index = this.array.findIndex(ar => ar.equals(value));
+            for (var i = 0; i < this.array.length; i++) {
 
-            return index;
+                const element = this.array[i];
+
+                if (value.equals(element)) return i;
+            }
         }
         return -1;
     }

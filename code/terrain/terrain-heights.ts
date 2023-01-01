@@ -48,9 +48,11 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     //              y2 - the y2
     // ****************************************************************************************************************
+    //              limiter - the limiter
+    // ****************************************************************************************************************
     // returns:     the variance
     // ****************************************************************************************************************
-    public getVariance(x1: number, y1: number, x2: number, y2: number): ITerrainVariance | null {
+    public getVariance(x1: number, y1: number, x2: number, y2: number, limiter: number): ITerrainVariance | null {
 
         // ************************************************************************************************************
         // setup variables
@@ -65,14 +67,14 @@ export class TerrainHeights implements ITerrainHeights {
         var maximum = Number.MIN_SAFE_INTEGER;
 
         // ************************************************************************************************************
-        // obtain variance
+        // obtain minimum and maximum heights
         // ************************************************************************************************************
 
-        for (var x = 0; x < dx; x++) {
+        for (var x = x1; x <= x2; x++) {
 
-            for (var y = 0; y < dy; y++) {
+            for (var y = y1; y <= y2; y++) {
 
-                const height = this.getHeight(x1 + x, y1 + y);
+                const height = this.getHeight(x, y);
 
                 minimum = min(minimum, height);
 
@@ -81,25 +83,31 @@ export class TerrainHeights implements ITerrainHeights {
         }
 
         // ************************************************************************************************************
+        // obtain variance
+        // ************************************************************************************************************
+
+        const difference = abs(maximum - minimum);
+
+        if (difference < limiter) return null;
+
+        const variance = new TerrainVariance(difference);
+
+        // ************************************************************************************************************
         // obtain children
         // ************************************************************************************************************
 
-        const variance = new TerrainVariance(abs(maximum - minimum));
+        const cx = x1 + (dx >> 1);
 
-        if (variance.variance > 0) {
+        const cy = y1 + (dy >> 1);
 
-            const cx = x1 + (dx >> 1);
+        variance.varianceNw = this.getVariance(x1, y1, cx, cy, limiter);
 
-            const cy = y1 + (dy >> 1);
+        variance.varianceNe = this.getVariance(cx, y1, x2, cy, limiter);
 
-            variance.varianceNw = this.getVariance(x1, y1, cx, cy);
+        variance.varianceSe = this.getVariance(cx, cy, x2, y2, limiter);
 
-            variance.varianceNe = this.getVariance(cx, y1, x2, cy);
+        variance.varianceSw = this.getVariance(x1, cy, cx, y2, limiter);
 
-            variance.varianceSe = this.getVariance(cx, cy, x2, y2);
-
-            variance.varianceSw = this.getVariance(x1, cy, cx, y2);
-        }
         return variance;
     }
 }

@@ -52,14 +52,11 @@ export class TerrainSimplexGenerator extends Generator<TerrainCellGrid> {
 
         var height = 0;
 
-        if (this.divisors.length) {
+        for (const divisor of this.divisors) {
 
-            for (const divisor of this.divisors) {
+            const value = this.getHeightFor(x, y, divisor);
 
-                const value = this.getHeightFor(x, y, divisor);
-
-                height = height ?? height * value;
-            }
+            height = height > 0 ? height * value : value;
         }
         return clampZeroOne(height);
     }

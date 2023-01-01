@@ -30,35 +30,43 @@ export class GeometryData implements IEquality<GeometryData> {
 
                 (this.position !== null && other.position !== null && this.position.equals(other.position));
 
+            if (equals === false) return equals;
+
             // ********************************************************************************************************
             // check uv
             // ********************************************************************************************************
 
-            if (equals) equals = (this.uv === null && other.uv === null) ||
+            equals = (this.uv === null && other.uv === null) ||
 
                 (this.uv !== null && other.uv !== null && this.uv.equals(other.uv));
+
+            if (equals === false) return equals;
 
             // ********************************************************************************************************
             // check uv2
             // ********************************************************************************************************
 
-            if (equals) equals = (this.uv2 === null && other.uv2 === null) ||
+            equals = (this.uv2 === null && other.uv2 === null) ||
 
                 (this.uv2 !== null && other.uv2 !== null && this.uv2.equals(other.uv2));
+
+            if (equals === false) return equals;
 
             // ********************************************************************************************************
             // check normal
             // ********************************************************************************************************
 
-            if (equals) equals = (this.normal === null && other.normal === null) ||
+            equals = (this.normal === null && other.normal === null) ||
 
                 (this.normal !== null && other.normal !== null && this.normal.equals(other.normal));
+
+            if (equals === false) return equals;
 
             // ********************************************************************************************************
             // check colour
             // ********************************************************************************************************
 
-            if (equals) equals = (this.colour === null && other.colour === null) ||
+            equals = (this.colour === null && other.colour === null) ||
 
                 (this.colour !== null && other.colour !== null && this.colour.equals(other.colour));
 

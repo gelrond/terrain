@@ -20,7 +20,7 @@ export class TerrainCellGridHeights extends TerrainHeights {
     // ****************************************************************************************************************
     constructor(private readonly grid: TerrainCellGrid) {
 
-        super(0, 0, 0);
+        super();
 
         this.offsetX = grid.sizeX >> 1;
 
@@ -38,16 +38,8 @@ export class TerrainCellGridHeights extends TerrainHeights {
     // ****************************************************************************************************************
     public getHeight(x: number, y: number): number {
 
-        const ox = this.offsetX + x;
+        const cell = this.grid.get(this.offsetX + x, this.offsetY + y);
 
-        const oy = this.offsetY + y;
-
-        if (this.grid.valid(ox, oy)) {
-
-            const cell = this.grid.get(ox, oy);
-
-            return clampZeroOne(cell?.height ?? 0);
-        }
-        return 0;
+        return clampZeroOne(cell?.height ?? 0);
     }
 }

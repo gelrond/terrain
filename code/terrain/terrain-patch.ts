@@ -1,12 +1,10 @@
 // ********************************************************************************************************************
-import { BufferGeometry, Material, MeshStandardMaterial, Texture, Vector3 } from 'three';
+import { BufferGeometry, Material, MeshStandardMaterial, Vector3 } from 'three';
 import { GeometryBuilder } from '../geometry/geometry-builder';
 import { GeometryData } from '../geometry/geometry-data';
 import { max } from '../helpers/math.helper';
 import { IEquality } from '../shared/equality.interface';
 import { Bounds2 } from '../types/bounds2';
-import { Canvas } from '../types/canvas';
-import { Colour } from '../types/colour';
 import { Vector2 } from '../types/vector2';
 import { Vector2List } from '../types/vector2-list';
 import { ITerrainHeights } from './terrain-heights.interface';
@@ -250,76 +248,9 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     public createMaterial(): Material {
 
-        const result = new MeshStandardMaterial({ color: '#a0f0a0', roughness: 1.0, wireframe: true });
+        const result = new MeshStandardMaterial({roughness: 0.9, wireframe: true });
 
         return result;
-    }
-
-    // ****************************************************************************************************************
-    // function:    createNormalMap
-    // ****************************************************************************************************************
-    // parameters:  size - the size
-    // ****************************************************************************************************************
-    // returns:     n/a
-    // ****************************************************************************************************************
-    public createNormalMap(size: number = 64): Texture {
-
-        // ************************************************************************************************************
-        // setup variables
-        // ************************************************************************************************************
-
-        const canvas = new Canvas(size, size);
-
-        const dx = this.pointNe.x - this.pointNw.x;
-
-        const dy = this.pointSw.y - this.pointNw.y;
-
-        const ox = dx / size; const oy = dy / size;
-
-        // ************************************************************************************************************
-        // traverse pixels
-        // ************************************************************************************************************
-
-        for (var x = 0; x < size; x++) {
-
-            for (var y = 0; y < size; y++) {
-
-                // ****************************************************************************************************
-                // obtain point
-                // ****************************************************************************************************
-
-                const px = this.pointNw.x + (x * ox);
-
-                const py = this.pointNw.y + (y * oy);
-
-                // ****************************************************************************************************
-                // obtain heights
-                // ****************************************************************************************************
-
-                const heightN = this.heights.getHeight(px, py - oy);
-
-                const heightE = this.heights.getHeight(px + ox, py);
-
-                const heightS = this.heights.getHeight(px, py + oy);
-
-                const heightW = this.heights.getHeight(px - ox, py);
-
-                // ****************************************************************************************************
-                // obtain normal
-                // ****************************************************************************************************
-
-                const nx = ((heightE - heightW) * 0.5) + 0.5;
-
-                const ny = ((heightN - heightS) * 0.5) + 0.5;
-
-                const no = new Vector2(nx, ny).normalize();
-
-                const normal = new Vector3(no.x, no.y, 1).normalize();
-
-                canvas.setPixel(x, y, new Colour(normal.x, normal.y, normal.z));
-            }
-        }
-        return canvas.getTexture();
     }
 
     // ****************************************************************************************************************
@@ -475,15 +406,15 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // parameters:  multiplier - the multiplier
     // ****************************************************************************************************************
-    //              minimum - the minimum
+    //              limiter - the limiter
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    public tesselate(multiplier: number = 0.1, minimum: number = 0.025): void {
+    public tesselate(multiplier: number = 0.1, limiter: number = 0.1): void {
 
-        this.variance = this.heights.getVariance(this.pointNw.x, this.pointNw.y, this.pointSe.x, this.pointSe.y);
+        this.variance = this.heights.getVariance(this.pointNw.x, this.pointNw.y, this.pointSe.x, this.pointSe.y, limiter);
 
-        if (this.variance) this.tesselateInternal(this.variance, max(minimum,this.variance.variance * multiplier));
+        if (this.variance) this.tesselateInternal(this.variance, this.variance.variance * multiplier);
     }
 
     // ****************************************************************************************************************
@@ -491,23 +422,23 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // parameters:  variance - the variance
     // ****************************************************************************************************************
-    //              limit - the limit
+    //              limiter - the limiter
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    private tesselateInternal(variance: ITerrainVariance, limit: number): void {
+    private tesselateInternal(variance: ITerrainVariance, limiter: number): void {
 
-        if (variance.variance >= limit) {
+        if (variance.variance >= limiter) {
 
             const children = this.split();
 
-            if (variance.varianceNw) children[0].tesselateInternal(variance.varianceNw, limit);
+            if (variance.varianceNw) children[0].tesselateInternal(variance.varianceNw, limiter);
 
-            if (variance.varianceNe) children[1].tesselateInternal(variance.varianceNe, limit);
+            if (variance.varianceNe) children[1].tesselateInternal(variance.varianceNe, limiter);
 
-            if (variance.varianceSe) children[2].tesselateInternal(variance.varianceSe, limit);
+            if (variance.varianceSe) children[2].tesselateInternal(variance.varianceSe, limiter);
 
-            if (variance.varianceSw) children[3].tesselateInternal(variance.varianceSw, limit);
+            if (variance.varianceSw) children[3].tesselateInternal(variance.varianceSw, limiter);
         }
     }
 }

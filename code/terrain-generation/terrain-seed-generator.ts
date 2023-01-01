@@ -25,7 +25,7 @@ export class TerrainSeedGenerator extends Generator<TerrainCellGrid> {
 
         const target = new TerrainCellGrid(this.size, this.size);
 
-        const inner = this.size - (this.edge * 2);
+        const inner = this.size - (this.edge << 1);
 
         const coverage = (this.coverage * inner * inner);
 

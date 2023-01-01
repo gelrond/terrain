@@ -9,7 +9,7 @@ export function abs(value: number): number {
 
     const result = Math.abs(value);
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -23,7 +23,7 @@ export function ceiling(value: number): number {
 
     const result = Math.ceil(value);
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -43,7 +43,7 @@ export function clamp(value: number, min: number, max: number): number {
 
     value = Math.max(value, min);
 
-    return value;
+    return digit(value);
 }
 
 // ********************************************************************************************************************
@@ -56,6 +56,20 @@ export function clamp(value: number, min: number, max: number): number {
 export function clampZeroOne(value: number): number {
 
     const result = clamp(value, 0, 1);
+
+    return digit(result);
+}
+
+// ********************************************************************************************************************
+// function:    digit
+// ********************************************************************************************************************
+// parameters:  value - the value
+// ********************************************************************************************************************
+// returns:     the result
+// ********************************************************************************************************************
+export function digit(value: number): number {
+
+    const result = isNaN(value) ? 0 : value;
 
     return result;
 }
@@ -71,7 +85,7 @@ export function floor(value: number): number {
 
     const result = Math.floor(value);
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -89,7 +103,7 @@ export function lerp(value1: number, value2: number, amount: number = 0.5): numb
 
     const result = value1 + (amount * (value2 - value1));
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -105,7 +119,7 @@ export function max(value1: number, value2: number): number {
 
     const result = Math.max(value1, value2);
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -121,7 +135,7 @@ export function min(value1: number, value2: number): number {
 
     const result = Math.min(value1, value2);
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -139,7 +153,7 @@ export function normalize(value: number, min: number, max: number): number {
 
     const result = scale(value, min, max, 0, 1);
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -153,7 +167,7 @@ export function round(value: number): number {
 
     const result = Math.round(value);
 
-    return result;
+    return digit(result);
 }
 
 // ********************************************************************************************************************
@@ -177,5 +191,5 @@ export function scale(value: number, oldMin: number, oldMax: number, newMin: num
 
     const result = range ? ((newMax - newMin) * (value - oldMin) / range) + newMin : 0;
 
-    return result;
+    return digit(result);
 }

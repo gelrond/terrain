@@ -15,7 +15,7 @@ export class TerrainCellGrid extends Array2<TerrainCell> {
 
             for (var y = 0; y < this.sizeY; y++) {
 
-                this.set(x, y, new TerrainCell(0));
+                this.array[x][y] = new TerrainCell(0);
             }
         }
     }
