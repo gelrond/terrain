@@ -1,7 +1,12 @@
 // ********************************************************************************************************************
 import { abs, clampZeroOne, sqrt } from "../../helpers/math.helper";
 // ********************************************************************************************************************
-export class TerrainModifierWeights {
+export class TerrainModifierWeight {
+
+    // ****************************************************************************************************************
+    // constructor
+    // ****************************************************************************************************************
+    constructor(public readonly x: number, public readonly y: number, public weight: number) { }
 
     // ****************************************************************************************************************
     // function:    generate
@@ -10,13 +15,13 @@ export class TerrainModifierWeights {
     // ****************************************************************************************************************
     // returns:     the weights
     // ****************************************************************************************************************
-    public static generate(radius: number): number[][] {
+    public static generate(radius: number): TerrainModifierWeight[] {
 
         // ************************************************************************************************************
         // setup variables
         // ************************************************************************************************************
 
-        const weights: number[][] = [];
+        const weights: TerrainModifierWeight[] = [];
 
         var size = radius << 1, total = 0, sx = 0, sy = 0;
 
@@ -26,15 +31,17 @@ export class TerrainModifierWeights {
 
         for (var x = 0; x < size; x++, sx = x * x) {
 
-            weights[x] = [];
-
             for (var y = 0; y < size; y++, sy = y * y) {
 
                 const distance = sqrt(sx + sy);
 
-                weights[x][y] = abs(1 - (distance / radius));
+                const amount = abs(1 - (distance / radius));
 
-                total += weights[x][y];
+                const weight = new TerrainModifierWeight(x - radius, y - radius, amount);
+
+                weights.push(weight)
+
+                total += amount;
             }
         }
 
@@ -42,12 +49,9 @@ export class TerrainModifierWeights {
         // setup weights normalized
         // ************************************************************************************************************
 
-        for (var x = 0; x < size; x++) {
+        for (var i = 0; i < weights.length; i++) {
 
-            for (var y = 0; y < size; y++) {
-
-                weights[x][y] = clampZeroOne(weights[x][y] / total);
-            }
+            weights[i].weight = clampZeroOne(weights[i].weight / total);
         }
         return weights;
     }

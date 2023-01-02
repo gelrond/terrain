@@ -58,10 +58,6 @@ export class TerrainHeights implements ITerrainHeights {
         // setup variables
         // ************************************************************************************************************
 
-        const dx = abs(x2 - x1); if (dx <= 1) return null;
-
-        const dy = abs(y2 - y1); if (dy <= 1) return null;
-
         var minimum = Number.MAX_SAFE_INTEGER;
 
         var maximum = Number.MIN_SAFE_INTEGER;
@@ -95,6 +91,14 @@ export class TerrainHeights implements ITerrainHeights {
         // ************************************************************************************************************
         // obtain children
         // ************************************************************************************************************
+
+        const dx = abs(x2 - x1);
+
+        const dy = abs(y2 - y1);
+
+        if (dx <= 1) return variance;
+
+        if (dy <= 1) return variance;
 
         const cx = x1 + (dx >> 1);
 

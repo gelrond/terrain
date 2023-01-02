@@ -70,13 +70,13 @@ scene.add(ocean);
 
 var terrainGrid = new TerrainGeneratorSeed().generate();
 
-while (terrainGrid.sizeX < 1024) {
+while (terrainGrid.sizeX < 512) {
 
     terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
 
     terrainGrid = new TerrainModifierShift().modify(terrainGrid);
 
-    if (terrainGrid.sizeX === 128) terrainGrid = new TerrainModifierErode().modify(terrainGrid);
+    // if (terrainGrid.sizeX === 128) terrainGrid = new TerrainModifierErode().modify(terrainGrid);
 }
 terrainGrid = new TerrainModifierSmooth().modify(terrainGrid);
 

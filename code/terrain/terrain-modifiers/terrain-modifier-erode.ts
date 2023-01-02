@@ -5,14 +5,14 @@ import { Modifier } from "../../modifiers/modifier";
 import { Vector2 } from "../../types/vector2";
 import { Vector2List } from "../../types/vector2-list";
 import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
-import { TerrainModifierWeights } from "./terrain-modifier-weights";
+import { TerrainModifierWeight } from "./terrain-modifier-weight";
 // ********************************************************************************************************************
 export class TerrainModifierErode extends Modifier<TerrainCellGrid, TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly erosionSpeed: number = 0.05, public readonly lifetime: number = 32, public readonly passes: number = 1, public readonly capacity: number = 0.05, public readonly depositSpeed: number = 0.3, public readonly inertia: number = 0.05, public readonly brush: number = 4) { super(); }
+    constructor(public readonly erosionSpeed: number = 0.1, public readonly lifetime: number = 32, public readonly passes: number = 1, public readonly capacity: number = 0.05, public readonly depositSpeed: number = 0.3, public readonly inertia: number = 0.05, public readonly weightRadius: number = 4) { super(); }
 
     // ****************************************************************************************************************
     // function:    modify
@@ -23,7 +23,7 @@ export class TerrainModifierErode extends Modifier<TerrainCellGrid, TerrainCellG
     // ****************************************************************************************************************
     public modify(source: TerrainCellGrid): TerrainCellGrid {
 
-        const weights = TerrainModifierWeights.generate(this.brush);
+        const weights = TerrainModifierWeight.generate(this.weightRadius);
 
         const droplets = this.getDroplets(source);
 
@@ -45,7 +45,7 @@ export class TerrainModifierErode extends Modifier<TerrainCellGrid, TerrainCellG
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modifyPass(source: TerrainCellGrid, droplets: Vector2[], weights: number[][]): TerrainCellGrid {
+    public modifyPass(source: TerrainCellGrid, droplets: Vector2[], weights: TerrainModifierWeight[]): TerrainCellGrid {
 
         for (var i = 0; i < droplets.length; i++) {
 
@@ -63,7 +63,7 @@ export class TerrainModifierErode extends Modifier<TerrainCellGrid, TerrainCellG
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modifyPassAt(source: TerrainCellGrid, droplet: Vector2, weights: number[][]): TerrainCellGrid {
+    public modifyPassAt(source: TerrainCellGrid, droplet: Vector2, weights: TerrainModifierWeight[]): TerrainCellGrid {
 
         const flows = this.getFlows(source, droplet);
 
@@ -83,22 +83,19 @@ export class TerrainModifierErode extends Modifier<TerrainCellGrid, TerrainCellG
 
                     const deposit = (sediment - this.capacity) * this.depositSpeed;
 
-                    for (var wx = 0; wx < weights.length; wx++) {
+                    for (var i = 0; i < weights.length; i++) {
 
-                        for (var wy = 0; wy < weights[wx].length; wy++) {
+                        const weight = weights[i];
 
-                            const weight = weights[wx][wy];
+                        const amount = weight.weight * deposit;
 
-                            const amount = weight * deposit;
+                        const src = source.get(flow.x + weight.x, flow.y + weight.y);
 
-                            const src = source.get(flow.x + wx, flow.y + wy);
-
-                            src.height = clampZeroOne(src.height + amount);
-                        }
-                        sediment -= deposit;
-
-                        continue;
+                        src.height = clampZeroOne(src.height + amount);
                     }
+                    sediment -= deposit;
+
+                    continue;
                 }
 
                 // ****************************************************************************************************
@@ -109,18 +106,15 @@ export class TerrainModifierErode extends Modifier<TerrainCellGrid, TerrainCellG
 
                     const deposit = sediment * this.depositSpeed;
 
-                    for (var wx = 0; wx < weights.length; wx++) {
+                    for (var i = 0; i < weights.length; i++) {
 
-                        for (var wy = 0; wy < weights[wx].length; wy++) {
+                        const weight = weights[i];
 
-                            const weight = weights[wx][wy];
+                        const amount = weight.weight * deposit;
 
-                            const amount = weight * deposit;
+                        const src = source.get(flow.x + weight.x, flow.y + weight.y);
 
-                            const src = source.get(flow.x + wx, flow.y + wy);
-
-                            src.height = clampZeroOne(src.height + amount);
-                        }
+                        src.height = clampZeroOne(src.height + amount);
                     }
                     continue;
                 }
@@ -131,18 +125,15 @@ export class TerrainModifierErode extends Modifier<TerrainCellGrid, TerrainCellG
 
                 const erosion = this.capacity * this.erosionSpeed;
 
-                for (var wx = 0; wx < weights.length; wx++) {
+                for (var i = 0; i < weights.length; i++) {
 
-                    for (var wy = 0; wy < weights[wx].length; wy++) {
+                    const weight = weights[i];
 
-                        const weight = weights[wx][wy];
+                    const amount = weight.weight * erosion;
 
-                        const amount = weight * erosion;
+                    const src = source.get(flow.x + weight.x, flow.y + weight.y);
 
-                        const src = source.get(flow.x + wx, flow.y + wy);
-
-                        src.height = clampZeroOne(src.height - amount);
-                    }
+                    src.height = clampZeroOne(src.height - amount);
                 }
                 sediment += erosion;
             }

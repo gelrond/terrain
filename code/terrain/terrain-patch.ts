@@ -415,7 +415,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    public tesselate(multiplier: number = 0.1, limiter: number = 0.1): void {
+    public tesselate(multiplier: number = 0.1, limiter: number = 0.05): void {
 
         this.variance = this.heights.getVariance(this.pointNw.x, this.pointNw.y, this.pointSe.x, this.pointSe.y, limiter);
 
