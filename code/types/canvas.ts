@@ -18,7 +18,7 @@ export class Canvas {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(private sizeX: number, private sizeY: number) {
+    constructor(public readonly sizeX: number, public readonly sizeY: number) {
 
         this.data = new ImageData(sizeX, sizeY);
 

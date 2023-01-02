@@ -1,6 +1,8 @@
 // ********************************************************************************************************************
 import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
 import { abs, clampZeroOne, max, min } from '../helpers/math.helper';
+import { Vector2 } from '../types/vector2';
+import { Vector3 } from '../types/vector3';
 import { ITerrainHeights } from './terrain-heights.interface';
 import { TerrainVariance } from './terrain-variance';
 import { ITerrainVariance } from './terrain-variance.interface';
@@ -16,6 +18,40 @@ export class TerrainHeights implements ITerrainHeights {
     // constructor
     // ****************************************************************************************************************
     constructor(private divisor1: number = 64, private divisor2: number = 256, private divisor3: number = 512) { }
+
+    // ****************************************************************************************************************
+    // function:    getGradient
+    // ****************************************************************************************************************
+    // parameters:  x - the x
+    // ****************************************************************************************************************
+    //              y - the y
+    // ****************************************************************************************************************
+    // returns:     the gradient
+    // ****************************************************************************************************************
+    public getGradient(x: number, y: number): Vector2 {
+
+        // ************************************************************************************************************
+        // obtain heights
+        // ************************************************************************************************************
+
+        const heightN = this.getHeight(x, y - 1);
+
+        const heightE = this.getHeight(x + 1, y);
+
+        const heightS = this.getHeight(x, y + 1);
+
+        const heightW = this.getHeight(x - 1, y);
+
+        // ************************************************************************************************************
+        // obtain heights
+        // ************************************************************************************************************
+
+        var gx = (heightE - heightW);
+
+        var gy = (heightS - heightN);
+
+        return new Vector2(gx, gy);
+    }
 
     // ****************************************************************************************************************
     // function:    getHeight
@@ -35,6 +71,26 @@ export class TerrainHeights implements ITerrainHeights {
         const noise3 = (this.noise(x / this.divisor3, y / this.divisor3) * 0.5) + 0.5;
 
         return clampZeroOne(noise1 * noise2 * noise3);
+    }
+
+    // ****************************************************************************************************************
+    // function:    getNormal
+    // ****************************************************************************************************************
+    // parameters:  x - the x
+    // ****************************************************************************************************************
+    //              y - the y
+    // ****************************************************************************************************************
+    //              multiplier - the multiplier
+    // ****************************************************************************************************************
+    // returns:     the normal
+    // ****************************************************************************************************************
+    public getNormal(x: number, y: number, multiplier: number = 10): Vector3 {
+
+        const gradient = this.getGradient(x, y);
+
+        const normal = new Vector3(gradient.x * multiplier, 1, gradient.y * multiplier).normalize();
+
+        return normal;
     }
 
     // ****************************************************************************************************************

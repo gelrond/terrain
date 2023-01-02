@@ -4,7 +4,6 @@ import { FogExp2 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { TerrainCellGridHeights } from './code/terrain/terrain-cell/terrain-cell-grid-heights';
 import { TerrainGeneratorSeed } from './code/terrain/terrain-generators/terrain-generator-seed';
-import { TerrainModifierErode } from './code/terrain/terrain-modifiers/terrain-modifier-erode';
 import { TerrainModifierNormalize } from './code/terrain/terrain-modifiers/terrain-modifier-normalize';
 import { TerrainModifierShift } from './code/terrain/terrain-modifiers/terrain-modifier-shift';
 import { TerrainModifierSmooth } from './code/terrain/terrain-modifiers/terrain-modifier-smooth';
@@ -70,13 +69,11 @@ scene.add(ocean);
 
 var terrainGrid = new TerrainGeneratorSeed().generate();
 
-while (terrainGrid.sizeX < 512) {
+while (terrainGrid.sizeX < 1024) {
 
     terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
 
     terrainGrid = new TerrainModifierShift().modify(terrainGrid);
-
-    // if (terrainGrid.sizeX === 128) terrainGrid = new TerrainModifierErode().modify(terrainGrid);
 }
 terrainGrid = new TerrainModifierSmooth().modify(terrainGrid);
 
@@ -90,7 +87,7 @@ const terrainHeights = new TerrainCellGridHeights(terrainGrid);
 
 //const terrainHeights = new TerrainHeights();
 
-const terrain = new TerrainPatchGrid(32, 32, 50);
+const terrain = new TerrainPatchGrid(2, 32, 50);
 
 terrain.create(scene, terrainHeights);
 

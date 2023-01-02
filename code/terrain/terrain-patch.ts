@@ -1,9 +1,12 @@
 // ********************************************************************************************************************
-import { BufferGeometry, Material, MeshStandardMaterial, Vector3 } from 'three';
+import { BufferGeometry, Material, MeshStandardMaterial, Texture, Vector3 } from 'three';
 import { GeometryBuilder } from '../geometry/geometry-builder';
 import { GeometryData } from '../geometry/geometry-data';
+import { clampZeroOne } from '../helpers/math.helper';
 import { IEquality } from '../shared/equality.interface';
 import { Bounds2 } from '../types/bounds2';
+import { Canvas } from '../types/canvas';
+import { Colour } from '../types/colour';
 import { Vector2 } from '../types/vector2';
 import { Vector2List } from '../types/vector2-list';
 import { ITerrainHeights } from './terrain-heights.interface';
@@ -228,13 +231,17 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
                 // obtain geometry
                 // ****************************************************************************************************
 
-                const height = this.heights.getHeight(point.x, point.y) * ceiling;
+                const height = this.heights.getHeight(point.x, point.y);
 
-                const position = new Vector3(point.x, height, point.y);
+                const position = new Vector3(point.x, height * ceiling, point.y);
+
+                const colour = new Colour(height, height, height);
+
+                const normal = new Vector3(0, 1, 0);
 
                 const uv = new Vector2(tu, 1 - tv);
 
-                const geometry = new GeometryData(position, uv);
+                const geometry = new GeometryData(position, uv, normal, colour);
 
                 geometries.push(geometry);
             }
@@ -249,11 +256,71 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // returns:     the material
     // ****************************************************************************************************************
-    public createMaterial(): Material {
+    public async createMaterial(): Promise<Material> {
 
-        const result = new MeshStandardMaterial({roughness: 0.9, wireframe: true });
+        return this.createNormalMap().then((normalMap) => {
 
-        return result;
+            const result = new MeshStandardMaterial({ roughness: 1.0, normalMap: normalMap, vertexColors: true, wireframe: false });
+
+            return result;
+        })
+    }
+
+    // ****************************************************************************************************************
+    // function:    createNormalMap
+    // ****************************************************************************************************************
+    // parameters:  size - the size
+    // ****************************************************************************************************************
+    // returns:     the normal map
+    // ****************************************************************************************************************
+    public async createNormalMap(size: number = 64): Promise<Texture> {
+
+        // ************************************************************************************************************
+        // setup variables
+        // ************************************************************************************************************
+
+        const canvas = new Canvas(size, size);
+
+        const dx = this.pointNe.x - this.pointNw.x;
+
+        const dy = this.pointSw.y - this.pointNw.y;
+
+        const ox = dx / size; const oy = dy / size;
+
+        // ************************************************************************************************************
+        // traverse pixels
+        // ************************************************************************************************************
+
+        for (var x = 0; x < size; x++) {
+
+            for (var y = 0; y < size; y++) {
+
+                // ****************************************************************************************************
+                // obtain normal
+                // ****************************************************************************************************
+
+                const px = this.pointNw.x + (x * ox);
+
+                const py = this.pointNw.y + (y * oy);
+
+                const normal = this.heights.getNormal(px, py);
+
+                // ****************************************************************************************************
+                // obtain colour
+                // ****************************************************************************************************
+
+                const cx = clampZeroOne((normal.x * 0.5) + 0.5);
+
+                const cy = clampZeroOne((normal.y * 0.5) + 0.5);
+
+                const cz = clampZeroOne((normal.z * 0.5) + 0.5);
+
+                const colour = new Colour(cx, cz, cy);
+
+                canvas.setPixel(x, y, colour);
+            }
+        }
+        return canvas.getTexture();
     }
 
     // ****************************************************************************************************************
