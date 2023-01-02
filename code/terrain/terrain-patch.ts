@@ -251,7 +251,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     public createMaterial(): Material {
 
-        const result = new MeshStandardMaterial({roughness: 0.9, wireframe: false });
+        const result = new MeshStandardMaterial({roughness: 0.9, wireframe: true });
 
         return result;
     }
