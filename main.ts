@@ -1,21 +1,20 @@
 // ********************************************************************************************************************
-import { createNoise3D, NoiseFunction3D } from 'simplex-noise';
 import * as THREE from 'three';
 import { FogExp2 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { TerrainCellGridHeights } from './code/terrain-cell/terrain-cell-grid-heights';
-import { TerrainSeedGenerator } from './code/terrain-generation/terrain-seed-generator';
-import { TerrainShiftModifier } from './code/terrain-generation/terrain-shift-modifier';
-import { TerrainSmoothModifier } from './code/terrain-generation/terrain-smooth-modifier';
-import { TerrainUpscaleModifier } from './code/terrain-generation/terrain-upscale-modifier';
-import { TerrainHeights } from './code/terrain/terrain-heights';
+import { TerrainCellGridHeights } from './code/terrain/terrain-cell/terrain-cell-grid-heights';
+import { TerrainGeneratorSeed } from './code/terrain/terrain-generators/terrain-generator-seed';
+import { TerrainModifierNormalize } from './code/terrain/terrain-modifiers/terrain-modifier-normalize';
+import { TerrainModifierShift } from './code/terrain/terrain-modifiers/terrain-modifier-shift';
+import { TerrainModifierSmooth } from './code/terrain/terrain-modifiers/terrain-modifier-smooth';
+import { TerrainModifierUpscale } from './code/terrain/terrain-modifiers/terrain-modifier-upscale';
 import { TerrainPatchGrid } from './code/terrain/terrain-patch-grid';
 // ********************************************************************************************************************
 
 // ********************************************************************************************************************
 // noise
 // ********************************************************************************************************************
-const noise: NoiseFunction3D = createNoise3D();
+// const noise: NoiseFunction3D = createNoise3D();
 
 // ********************************************************************************************************************
 // scene & renderer
@@ -68,15 +67,17 @@ scene.add(ocean);
 // terrain generation
 // ********************************************************************************************************************
 
-var terrainGrid = new TerrainSeedGenerator().generate();
+var terrainGrid = new TerrainGeneratorSeed().generate();
 
 while (terrainGrid.sizeX < 512) {
 
-    terrainGrid = new TerrainUpscaleModifier().modify(terrainGrid);
+    terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
 
-    terrainGrid = new TerrainShiftModifier().modify(terrainGrid);
+    terrainGrid = new TerrainModifierShift().modify(terrainGrid);
 }
-terrainGrid = new TerrainSmoothModifier().modify(terrainGrid);
+terrainGrid = new TerrainModifierSmooth().modify(terrainGrid);
+
+terrainGrid = new TerrainModifierNormalize().modify(terrainGrid);
 
 // ********************************************************************************************************************
 // terrain

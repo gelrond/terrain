@@ -1,6 +1,6 @@
 // ********************************************************************************************************************
-import { IEquality } from "../shared/equality.interface";
-import { Colour } from "../types/colour";
+import { IEquality } from "../../shared/equality.interface";
+import { Colour } from "../../types/colour";
 // ********************************************************************************************************************
 enum Biomes { UNKNOWN, SEA_BED, BEACH, BEACH_HEAD, PLAIN, GRASS_LAND, FOREST, MOUNTAIN, ICE_CAP }
 // ********************************************************************************************************************

@@ -1,5 +1,5 @@
 // ********************************************************************************************************************
-import { Array2 } from "../types/array2";
+import { Array2 } from "../../types/array2";
 import { TerrainCell } from "./terrain-cell";
 // ********************************************************************************************************************
 export class TerrainCellGrid extends Array2<TerrainCell> {

@@ -1,6 +1,6 @@
 // ********************************************************************************************************************
-import { clampZeroOne } from "../helpers/math.helper";
-import { TerrainHeights } from "../terrain/terrain-heights";
+import { clampZeroOne } from "../../helpers/math.helper";
+import { TerrainHeights } from "../terrain-heights";
 import { TerrainCellGrid } from "./terrain-cell-grid";
 // ********************************************************************************************************************
 export class TerrainCellGridHeights extends TerrainHeights {

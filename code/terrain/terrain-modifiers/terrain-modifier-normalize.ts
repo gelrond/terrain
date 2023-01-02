@@ -1,52 +1,57 @@
 // ********************************************************************************************************************
-import { Generator } from "../generators/generator";
-import { random, randomInteger } from "../helpers/random.helper";
+import { max, min, normalize } from "../../helpers/math.helper";
+import { Modifier } from "../../modifiers/modifier";
 import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
 // ********************************************************************************************************************
-export class TerrainSeedGenerator extends Generator<TerrainCellGrid> {
+export class TerrainModifierNormalize extends Modifier<TerrainCellGrid, TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly size: number = 16, public readonly coverage: number = 0.9, public readonly max: number = 1, public readonly min: number = 0.5, public readonly edge: number = 1) { super(); }
+    constructor() { super(); }
 
     // ****************************************************************************************************************
-    // function:    generate
+    // function:    modify
     // ****************************************************************************************************************
-    // parameters:  n/a
+    // parameters:  source - the source
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public generate(): TerrainCellGrid {
+    public modify(source: TerrainCellGrid): TerrainCellGrid {
 
         // ************************************************************************************************************
-        // setup variables
+        // obtain minimum and maximum
         // ************************************************************************************************************
 
-        const target = new TerrainCellGrid(this.size, this.size);
+        var minimum = Number.MAX_SAFE_INTEGER;
 
-        const inner = this.size - (this.edge << 1);
+        var maximum = Number.MIN_SAFE_INTEGER;
 
-        const coverage = (this.coverage * inner * inner);
+        for (var x = 0; x < source.sizeX; x++) {
 
-        // ************************************************************************************************************
-        // keep seeding until coverage reached
-        // ************************************************************************************************************
+            for (var y = 0; y < source.sizeY; y++) {
 
-        for (var pass = 0; pass < coverage;) {
+                var src = source.get(x, y);
 
-            const x = randomInteger(this.edge, this.size - this.edge)
+                minimum = min(minimum, src.height);
 
-            const y = randomInteger(this.edge, this.size - this.edge)
-
-            const tgt = target.get(x, y);
-
-            if (tgt.height > 0) continue;
-
-            tgt.height = random(this.min, this.max);
-
-            pass++;
+                maximum = max(maximum, src.height);
+            }
         }
-        return target;
+
+        // ************************************************************************************************************
+        // normalize
+        // ************************************************************************************************************
+
+        for (var x = 0; x < source.sizeX; x++) {
+
+            for (var y = 0; y < source.sizeY; y++) {
+
+                var src = source.get(x, y);
+
+                src.height = normalize(src.height, minimum, maximum);
+            }
+        }
+        return source;
     }
 }

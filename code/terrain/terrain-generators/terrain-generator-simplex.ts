@@ -1,10 +1,10 @@
 // ********************************************************************************************************************
 import { createNoise2D, NoiseFunction2D } from "simplex-noise";
-import { Generator } from "../generators/generator";
-import { clampZeroOne } from "../helpers/math.helper";
+import { Generator } from "../../generators/generator";
+import { clampZeroOne } from "../../helpers/math.helper";
 import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
 // ********************************************************************************************************************
-export class TerrainSimplexGenerator extends Generator<TerrainCellGrid> {
+export class TerrainGeneratorSimplex extends Generator<TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // noise - the noise

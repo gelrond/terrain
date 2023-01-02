@@ -1,15 +1,14 @@
 // ********************************************************************************************************************
-import { max, min } from "../helpers/math.helper";
-import { random, randomChance, randomInteger } from "../helpers/random.helper";
-import { Modifier } from "../modifiers/modifier";
+import { max } from "../../helpers/math.helper";
+import { Modifier } from "../../modifiers/modifier";
 import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
 // ********************************************************************************************************************
-export class TerrainShiftModifier extends Modifier<TerrainCellGrid, TerrainCellGrid> {
+export class TerrainModifierSmooth extends Modifier<TerrainCellGrid, TerrainCellGrid> {
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly shift: number = 0.33, public readonly passes: number = 5) { super(); }
+    constructor(public readonly passes: number = 2, public readonly distance: number = 8) { super(); }
 
     // ****************************************************************************************************************
     // function:    modify
@@ -20,9 +19,11 @@ export class TerrainShiftModifier extends Modifier<TerrainCellGrid, TerrainCellG
     // ****************************************************************************************************************
     public modify(source: TerrainCellGrid): TerrainCellGrid {
 
+        const radius = max(1, this.distance >> 1);
+
         for (var pass = 0; pass < this.passes; pass++) {
 
-            source = this.modifyPass(source);
+            source = this.modifyPass(source, radius);
         }
         return source;
     }
@@ -32,51 +33,35 @@ export class TerrainShiftModifier extends Modifier<TerrainCellGrid, TerrainCellG
     // ****************************************************************************************************************
     // parameters:  source - the source
     // ****************************************************************************************************************
+    //              radius - the radius
+    // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modifyPass(source: TerrainCellGrid): TerrainCellGrid {
+    public modifyPass(source: TerrainCellGrid, radius: number): TerrainCellGrid {
 
         const target = new TerrainCellGrid(source.sizeX, source.sizeY);
 
-        for (var x = 0; x < target.sizeX; x++) {
+        for (var x = 0; x < source.sizeX; x++) {
 
-            for (var y = 0; y < target.sizeY; y++) {
+            for (var y = 0; y < source.sizeY; y++) {
 
-                var src = source.get(x, y);
+                var height = 0; var count = 0;
 
-                var tgt = target.get(x, y);
+                for (var ix = x - radius; ix <= x + radius; ix++) {
 
-                tgt.height = src.height;
+                    for (var iy = y - radius; iy <= y + radius; iy++) {
 
-                if (randomChance(this.shift)) {
+                        if (source.valid(ix, iy)) {
 
-                    var direction = randomInteger(1, 8);
+                            const src = source.get(ix, iy);
 
-                    if (direction == 1) src = source.get(x - 1, y - 1);
-
-                    if (direction == 2) src = source.get(x, y - 1);
-
-                    if (direction == 3) src = source.get(x + 1, y - 1);
-
-                    if (direction == 4) src = source.get(x - 1, y);
-
-                    if (direction == 5) src = source.get(x + 1, y);
-
-                    if (direction == 6) src = source.get(x - 1, y + 1);
-
-                    if (direction == 7) src = source.get(x, y + 1);
-
-                    if (direction == 8) src = source.get(x + 1, y + 1);
-
-                    if (src.height < tgt.height) {
-
-                        var minimum = min(src.height, tgt.height);
-
-                        var maximum = max(src.height, tgt.height);
-
-                        tgt.height = random(minimum, maximum);
+                            height += src.height; count++;
+                        }
                     }
                 }
+                const tgt = target.get(x, y);
+
+                tgt.height = height / count;
             }
         }
         return target;
