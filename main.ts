@@ -87,7 +87,7 @@ const terrainHeights = new TerrainCellGridHeights(terrainGrid);
 
 //const terrainHeights = new TerrainHeights();
 
-const terrain = new TerrainPatchGrid(2, 32, 50);
+const terrain = new TerrainPatchGrid(32, 32, 50);
 
 terrain.create(scene, terrainHeights);
 

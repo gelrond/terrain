@@ -84,7 +84,7 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     // returns:     the normal
     // ****************************************************************************************************************
-    public getNormal(x: number, y: number, multiplier: number = 10): Vector3 {
+    public getNormal(x: number, y: number, multiplier: number = 16): Vector3 {
 
         const gradient = this.getGradient(x, y);
 
