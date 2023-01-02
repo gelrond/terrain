@@ -6,6 +6,8 @@ I wrote this to try and create a terrain system that was easy to use and extend.
 
 <a href="https://ibb.co/ZLM4Xmz"><img src="https://i.ibb.co/kHSbB12/screenshot-1.png" alt="screenshot-1" border="0"></a>
 
+<a href="https://ibb.co/Wz1vpQk"><img src="https://i.ibb.co/7pFtNHn/screenshot-2.png" alt="screenshot-2" border="0"></a>
+
 <h3>Installation</h3>
 
 <ol>
