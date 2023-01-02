@@ -8,7 +8,7 @@ export class TerrainModifierSmooth extends Modifier<TerrainCellGrid, TerrainCell
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly passes: number = 2, public readonly distance: number = 8) { super(); }
+    constructor(public readonly passes: number = 1, public readonly distance: number = 4) { super(); }
 
     // ****************************************************************************************************************
     // function:    modify
@@ -45,7 +45,7 @@ export class TerrainModifierSmooth extends Modifier<TerrainCellGrid, TerrainCell
 
             for (var y = 0; y < source.sizeY; y++) {
 
-                var height = 0; var count = 0;
+                var height = 0, count = 0;
 
                 for (var ix = x - radius; ix <= x + radius; ix++) {
 
