@@ -1,5 +1,6 @@
 // ********************************************************************************************************************
 import { Mesh, Scene } from 'three';
+import { IProgress } from '../progress/progress.interface';
 import { Vector2 } from '../types/vector2';
 import { ITerrainHeights } from './terrain-heights.interface';
 import { TerrainPatch } from './terrain-patch';
@@ -20,7 +21,7 @@ export class TerrainPatchGrid {
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    public create(scene: Scene, heights: ITerrainHeights): void {
+    public create(scene: Scene, heights: ITerrainHeights, progress: IProgress): void {
 
         // ************************************************************************************************************
         // setup variables
@@ -32,17 +33,23 @@ export class TerrainPatchGrid {
 
         const totalSizeHalf = totalSize >> 1;
 
+        const totalPatches = this.patchesPerSide * this.patchesPerSide;
+
         const patches: TerrainPatch[][] = [];
 
         // ************************************************************************************************************
-        // traverse grid
+        // setup patches
         // ************************************************************************************************************
+
+        progress.begin(totalPatches, 'Creating Patches', 1);
 
         for (var x = 0; x < this.patchesPerSide; x++) {
 
             patches[x] = [];
 
             for (var y = 0; y < this.patchesPerSide; y++) {
+
+                progress.next();
 
                 // ****************************************************************************************************
                 // obtain origin
@@ -76,9 +83,13 @@ export class TerrainPatchGrid {
         // setup neighbours
         // ************************************************************************************************************
 
+        progress.begin(totalPatches, 'Linking & Tesselating', 1);
+
         for (var x = 0; x < this.patchesPerSide; x++) {
 
             for (var y = 0; y < this.patchesPerSide; y++) {
+
+                progress.next();
 
                 const patch = patches[x][y];
 
@@ -100,9 +111,13 @@ export class TerrainPatchGrid {
         // setup mesh
         // ************************************************************************************************************
 
+        progress.begin(totalPatches, 'Creating Geometry', 1);
+
         for (var x = 0; x < this.patchesPerSide; x++) {
 
             for (var y = 0; y < this.patchesPerSide; y++) {
+
+                progress.next();
 
                 const patch = patches[x][y];
 

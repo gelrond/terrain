@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { FogExp2 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { ProgressConsole } from './code/progress/progress-console';
 import { TerrainCellGridHeights } from './code/terrain/terrain-cell/terrain-cell-grid-heights';
 import { TerrainGeneratorSeed } from './code/terrain/terrain-generators/terrain-generator-seed';
 import { TerrainModifierNormalize } from './code/terrain/terrain-modifiers/terrain-modifier-normalize';
@@ -10,6 +11,11 @@ import { TerrainModifierSmooth } from './code/terrain/terrain-modifiers/terrain-
 import { TerrainModifierUpscale } from './code/terrain/terrain-modifiers/terrain-modifier-upscale';
 import { TerrainPatchGrid } from './code/terrain/terrain-patch-grid';
 // ********************************************************************************************************************
+
+// ********************************************************************************************************************
+// progress
+// ********************************************************************************************************************
+const progress = new ProgressConsole();
 
 // ********************************************************************************************************************
 // noise
@@ -88,7 +94,7 @@ const terrainHeights = new TerrainCellGridHeights(terrainGrid);
 
 const terrain = new TerrainPatchGrid(16, 64, 50);
 
-terrain.create(scene, terrainHeights);
+terrain.create(scene, terrainHeights, progress);
 
 // ********************************************************************************************************************
 // initialise
