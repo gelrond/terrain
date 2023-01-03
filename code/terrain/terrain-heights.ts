@@ -26,21 +26,23 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     //              y - the y
     // ****************************************************************************************************************
+    //              multiplier - the multiplier
+    // ****************************************************************************************************************
     // returns:     the gradient
     // ****************************************************************************************************************
-    public getGradient(x: number, y: number): Vector2 {
+    public getGradient(x: number, y: number, multiplier: number = 16): Vector2 {
 
         // ************************************************************************************************************
         // obtain heights
         // ************************************************************************************************************
 
-        const heightN = this.getHeight(x, y - 1);
+        const heightN = this.getHeight(x, y - 1) * multiplier;
 
-        const heightE = this.getHeight(x + 1, y);
+        const heightE = this.getHeight(x + 1, y) * multiplier;
 
-        const heightS = this.getHeight(x, y + 1);
+        const heightS = this.getHeight(x, y + 1) * multiplier;
 
-        const heightW = this.getHeight(x - 1, y);
+        const heightW = this.getHeight(x - 1, y) * multiplier;
 
         // ************************************************************************************************************
         // obtain heights
@@ -86,9 +88,9 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     public getNormal(x: number, y: number, multiplier: number = 16): Vector3 {
 
-        const gradient = this.getGradient(x, y);
+        const gradient = this.getGradient(x, y, multiplier);
 
-        const normal = new Vector3(gradient.x * multiplier, 1, gradient.y * multiplier).normalize();
+        const normal = new Vector3(gradient.x, 1, gradient.y).normalize();
 
         return normal;
     }

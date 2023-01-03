@@ -256,14 +256,13 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // returns:     the material
     // ****************************************************************************************************************
-    public async createMaterial(): Promise<Material> {
+    public createMaterial(): Material {
 
-        return this.createNormalMap().then((normalMap) => {
+        const normalMap = this.createNormalMap();
 
-            const result = new MeshStandardMaterial({ roughness: 1.0, normalMap: normalMap, vertexColors: true, wireframe: false });
+        const result = new MeshStandardMaterial({ roughness: 1.0, normalMap: normalMap, vertexColors: true, wireframe: true });
 
-            return result;
-        })
+        return result;
     }
 
     // ****************************************************************************************************************
@@ -273,7 +272,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // returns:     the normal map
     // ****************************************************************************************************************
-    public async createNormalMap(size: number = 64): Promise<Texture> {
+    public createNormalMap(size: number = 64): Texture {
 
         // ************************************************************************************************************
         // setup variables
@@ -482,7 +481,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    public tesselate(multiplier: number = 0.1, limiter: number = 0.05): void {
+    public tesselate(multiplier: number = 0.1, limiter: number = 0.1): void {
 
         this.variance = this.heights.getVariance(this.pointNw.x, this.pointNw.y, this.pointSe.x, this.pointSe.y, limiter);
 

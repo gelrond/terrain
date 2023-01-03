@@ -66,7 +66,6 @@ scene.add(ocean);
 // ********************************************************************************************************************
 // terrain generation
 // ********************************************************************************************************************
-
 var terrainGrid = new TerrainGeneratorSeed().generate();
 
 while (terrainGrid.sizeX < 1024) {
@@ -85,9 +84,9 @@ terrainGrid = new TerrainModifierNormalize().modify(terrainGrid);
 
 const terrainHeights = new TerrainCellGridHeights(terrainGrid);
 
-//const terrainHeights = new TerrainHeights();
+// const terrainHeights = new TerrainHeights();
 
-const terrain = new TerrainPatchGrid(32, 32, 50);
+const terrain = new TerrainPatchGrid(16, 64, 50);
 
 terrain.create(scene, terrainHeights);
 

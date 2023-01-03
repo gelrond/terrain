@@ -108,14 +108,11 @@ export class TerrainPatchGrid {
 
                 const geometry = patch.createGeometry(this.ceiling);
 
-                const mesh = new Mesh(geometry);
+                const material = patch.createMaterial();
+
+                const mesh = new Mesh(geometry, material);
 
                 scene.add(mesh);
-
-                patch.createMaterial().then((material) => {
-
-                    mesh.material = material;
-                })
             }
         }
     }
