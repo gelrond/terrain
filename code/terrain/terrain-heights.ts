@@ -1,6 +1,7 @@
 // ********************************************************************************************************************
 import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
 import { abs, clampZeroOne, max, min } from '../helpers/math.helper';
+import { Colour } from '../types/colour';
 import { Vector2 } from '../types/vector2';
 import { Vector3 } from '../types/vector3';
 import { ITerrainHeights } from './terrain-heights.interface';
@@ -18,6 +19,22 @@ export class TerrainHeights implements ITerrainHeights {
     // constructor
     // ****************************************************************************************************************
     constructor(private divisor1: number = 64, private divisor2: number = 256, private divisor3: number = 512) { }
+
+    // ****************************************************************************************************************
+    // function:    getColour
+    // ****************************************************************************************************************
+    // parameters:  x - the x
+    // ****************************************************************************************************************
+    //              y - the y
+    // ****************************************************************************************************************
+    // returns:     the colour
+    // ****************************************************************************************************************
+    public getColour(x: number, y: number): Colour {
+
+        const height = this.getHeight(x, y);
+
+        return new Colour(height, height, height);
+    }
 
     // ****************************************************************************************************************
     // function:    getGradient

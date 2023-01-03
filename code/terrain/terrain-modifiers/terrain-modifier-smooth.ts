@@ -8,7 +8,7 @@ export class TerrainModifierSmooth extends Modifier<TerrainCellGrid, TerrainCell
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly passes: number = 1, public readonly distance: number = 4) { super(); }
+    constructor(public readonly passes: number = 1, public readonly distance: number = 3) { super(); }
 
     // ****************************************************************************************************************
     // function:    modify

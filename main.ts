@@ -1,4 +1,5 @@
 // ********************************************************************************************************************
+import { createNoise3D, NoiseFunction3D } from 'simplex-noise';
 import * as THREE from 'three';
 import { FogExp2 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -20,7 +21,7 @@ const progress = new ProgressConsole();
 // ********************************************************************************************************************
 // noise
 // ********************************************************************************************************************
-// const noise: NoiseFunction3D = createNoise3D();
+const noise: NoiseFunction3D = createNoise3D();
 
 // ********************************************************************************************************************
 // scene & renderer
@@ -54,12 +55,12 @@ scene.add(sun);
 // ********************************************************************************************************************
 // ocean
 // ********************************************************************************************************************
-/*
-const oceanGeometry = new THREE.PlaneGeometry(512, 512, 256, 256);
+
+const oceanGeometry = new THREE.PlaneGeometry(1024, 1024, 256, 256);
 
 oceanGeometry.rotateX(THREE.MathUtils.degToRad(-90));
 
-const oceanMaterial = new THREE.MeshStandardMaterial({ color: '#3366a0', roughness: 0.5, metalness: 0, wireframe: false });
+const oceanMaterial = new THREE.MeshStandardMaterial({ color: '#3366a0', envMapIntensity: 4, roughness: 0.33, metalness: 0, transparent: true, opacity: 0.33, wireframe: false });
 
 const ocean = new THREE.Mesh(oceanGeometry, oceanMaterial);
 
@@ -67,8 +68,8 @@ var oceanPass = 0;
 
 ocean.position.y = 8;
 
-scene.add(ocean);
-*/
+// scene.add(ocean);
+
 // ********************************************************************************************************************
 // terrain generation
 // ********************************************************************************************************************
@@ -92,7 +93,7 @@ const terrainHeights = new TerrainCellGridHeights(terrainGrid);
 
 // const terrainHeights = new TerrainHeights();
 
-const terrain = new TerrainPatchGrid(16, 64, 50);
+const terrain = new TerrainPatchGrid(32, 32, 50);
 
 terrain.create(scene, terrainHeights, progress);
 
@@ -129,13 +130,12 @@ function update() {
 
     renderer.render(scene, camera);
 
-    // updateOcean();
+    updateOcean();
 }
 
 // ********************************************************************************************************************
 // updateOcean
 // ********************************************************************************************************************
-/*
 function updateOcean() {
 
     const positions = oceanGeometry.getAttribute('position');
@@ -160,5 +160,5 @@ function updateOcean() {
 
     oceanGeometry.attributes.position.needsUpdate = true;
 }
-*/
+
 initialise();

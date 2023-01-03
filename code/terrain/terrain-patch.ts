@@ -235,7 +235,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
                 const position = new Vector3(point.x, height * ceiling, point.y);
 
-                const colour = new Colour(height, height, height);
+                const colour = this.heights.getColour(point.x, point.y);
 
                 const normal = new Vector3(0, 1, 0);
 
@@ -260,7 +260,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
         const normalMap = this.createNormalMap();
 
-        const result = new MeshStandardMaterial({ roughness: 1.0, normalMap: normalMap, vertexColors: true, wireframe: true });
+        const result = new MeshStandardMaterial({ roughness: 1.0, normalMap: normalMap, vertexColors: true, wireframe: false });
 
         return result;
     }
@@ -272,7 +272,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // returns:     the normal map
     // ****************************************************************************************************************
-    public createNormalMap(size: number = 64): Texture {
+    public createNormalMap(size: number = 32): Texture {
 
         // ************************************************************************************************************
         // setup variables
