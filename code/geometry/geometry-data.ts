@@ -1,7 +1,10 @@
 // ********************************************************************************************************************
 import { IEquality } from "../shared/equality.interface";
+// ********************************************************************************************************************
 import { Colour } from "../types/colour";
+// ********************************************************************************************************************
 import { Vector2 } from "../types/vector2";
+// ********************************************************************************************************************
 import { Vector3 } from "../types/vector3";
 // ********************************************************************************************************************
 export class GeometryData implements IEquality<GeometryData> {
@@ -9,7 +12,7 @@ export class GeometryData implements IEquality<GeometryData> {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public position: Vector3 | null = null, public uv: Vector2 | null = null, public normal: Vector3 | null = null, public colour: Colour | null = null, public uv2: Vector2 | null = null) { }
+    constructor(public position?: Vector3, public uv?: Vector2, public normal?: Vector3, public colour?: Colour, public uv2?: Vector2) { }
 
     // ****************************************************************************************************************
     // function:    equals
@@ -26,9 +29,7 @@ export class GeometryData implements IEquality<GeometryData> {
             // check position
             // ********************************************************************************************************
 
-            var equals = (this.position === null && other.position === null) ||
-
-                (this.position !== null && other.position !== null && this.position.equals(other.position));
+            var equals = (!this.position && !other.position) || (this.position && other.position && this.position.equals(other.position)) || false;
 
             if (equals === false) return equals;
 
@@ -36,9 +37,7 @@ export class GeometryData implements IEquality<GeometryData> {
             // check uv
             // ********************************************************************************************************
 
-            equals = (this.uv === null && other.uv === null) ||
-
-                (this.uv !== null && other.uv !== null && this.uv.equals(other.uv));
+            equals = (!this.uv && !other.uv) || (this.uv && other.uv && this.uv.equals(other.uv)) || false;
 
             if (equals === false) return equals;
 
@@ -46,9 +45,7 @@ export class GeometryData implements IEquality<GeometryData> {
             // check normal
             // ********************************************************************************************************
 
-            equals = (this.normal === null && other.normal === null) ||
-
-                (this.normal !== null && other.normal !== null && this.normal.equals(other.normal));
+            equals = (!this.normal && !other.normal) || (this.normal && other.normal && this.normal.equals(other.normal)) || false;
 
             if (equals === false) return equals;
 
@@ -56,9 +53,7 @@ export class GeometryData implements IEquality<GeometryData> {
             // check colour
             // ********************************************************************************************************
 
-            equals = (this.colour === null && other.colour === null) ||
-
-                (this.colour !== null && other.colour !== null && this.colour.equals(other.colour));
+            equals = (!this.colour && !other.colour) || (this.colour && other.colour && this.colour.equals(other.colour)) || false;
 
             if (equals === false) return equals;
 
@@ -66,9 +61,7 @@ export class GeometryData implements IEquality<GeometryData> {
             // check uv2
             // ********************************************************************************************************
 
-            equals = (this.uv2 === null && other.uv2 === null) ||
-
-                (this.uv2 !== null && other.uv2 !== null && this.uv2.equals(other.uv2));
+            equals = (!this.uv2 && !other.uv2) || (this.uv2 && other.uv2 && this.uv2.equals(other.uv2)) || false;
 
             return equals;
         }
