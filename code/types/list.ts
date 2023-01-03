@@ -50,9 +50,7 @@ export class List<_TType extends IEquality<_TType>> {
 
             for (var i = 0; i < values.length; i++) {
 
-                const value = values[i];
-
-                const index = this.add(value, duplicatesAllowed);
+                const index = this.add(values[i], duplicatesAllowed);
 
                 indices.push(index);
             }
@@ -69,9 +67,7 @@ export class List<_TType extends IEquality<_TType>> {
     // ****************************************************************************************************************
     public contains(value: _TType): boolean {
 
-        const index = this.indexOf(value);
-
-        return index >= 0;
+        return this.indexOf(value) >= 0;
     }
 
     // ****************************************************************************************************************
@@ -113,9 +109,7 @@ export class List<_TType extends IEquality<_TType>> {
 
             for (var i = 0; i < this.array.length; i++) {
 
-                const element = this.array[i];
-
-                if (value.equals(element)) return i;
+                if (value.equals(this.array[i])) return i;
             }
         }
         return -1;

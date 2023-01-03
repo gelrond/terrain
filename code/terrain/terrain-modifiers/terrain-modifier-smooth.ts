@@ -51,7 +51,7 @@ export class TerrainModifierSmooth extends Modifier<TerrainDataGrid, TerrainData
 
                     for (var iy = y - radius; iy <= y + radius; iy++) {
 
-                        if (source.valid(ix, iy)) {
+                        if (source.isValid(ix, iy)) {
 
                             const src = source.get(ix, iy);
 

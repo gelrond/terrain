@@ -1,6 +1,8 @@
 // ********************************************************************************************************************
 import * as THREE from 'three';
+// ********************************************************************************************************************
 import { clamp } from '../helpers/math.helper';
+// ********************************************************************************************************************
 import { Colour } from "./colour";
 // ********************************************************************************************************************
 export class Canvas {
@@ -8,47 +10,38 @@ export class Canvas {
     // ****************************************************************************************************************
     // data - the data
     // ****************************************************************************************************************
-    private data: ImageData;
+    private readonly data: ImageData;
 
     // ****************************************************************************************************************
     // offsets - the offsets
     // ****************************************************************************************************************
-    private offsets: number[][] = [];
+    private readonly offsets: number[][][] = [];
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
     constructor(public readonly sizeX: number, public readonly sizeY: number) {
 
-        this.data = new ImageData(sizeX, sizeY);
+        var offset = 0;
 
-        for (var x = 0; x < sizeX; x++) {
+        for (var y = 0; y < sizeY; y++) {
 
-            this.offsets[x] = [];
+            this.offsets[y] = [];
 
-            for (var y = 0; y < sizeY; y++) {
+            for (var x = 0; x < sizeX; x++) {
 
-                this.offsets[x][y] = ((y * sizeY) * 4) + (x * 4);
+                this.offsets[y][x] = [];
+
+                this.offsets[y][x][0] = offset++;
+
+                this.offsets[y][x][1] = offset++;
+
+                this.offsets[y][x][2] = offset++;
+
+                this.offsets[y][x][3] = offset++;
             }
         }
-    }
-
-    // ****************************************************************************************************************
-    // function:    getOffset
-    // ****************************************************************************************************************
-    // parameters:  x - the x
-    // ****************************************************************************************************************
-    //              y - the y
-    // ****************************************************************************************************************
-    // returns:     the offset
-    // ****************************************************************************************************************
-    private getOffset(x: number, y: number): number {
-
-        x = clamp(x, 0, this.sizeX - 1);
-
-        y = clamp(y, 0, this.sizeY - 1);
-
-        return this.offsets[x][y];
+        this.data = new ImageData(sizeX, sizeY);
     }
 
     // ****************************************************************************************************************
@@ -58,7 +51,7 @@ export class Canvas {
     // ****************************************************************************************************************
     // returns:     the texture
     // ****************************************************************************************************************
-    public getTexture(wrapping: THREE.Wrapping = THREE.MirroredRepeatWrapping): THREE.Texture {
+    public getTexture(wrapping: THREE.Wrapping = THREE.ClampToEdgeWrapping): THREE.Texture {
 
         const canvas = document.createElement('canvas');
 
@@ -88,17 +81,20 @@ export class Canvas {
     // ****************************************************************************************************************
     public setPixel(x: number, y: number, colour: Colour): void {
 
-        var offset = this.getOffset(x, y);
+        if (x >= 0 && x < this.sizeX && y >= 0 && y < this.sizeY) {
 
-        if (offset >= 0) {
+            const offsets = this.offsets[y][x];
 
-            this.data.data[offset++] = clamp(colour.r * 255, 0, 255);
+            if (offsets.length === 4) {
 
-            this.data.data[offset++] = clamp(colour.g * 255, 0, 255);
+                this.data.data[offsets[0]] = clamp(colour.r * 255, 0, 255);
 
-            this.data.data[offset++] = clamp(colour.b * 255, 0, 255);
+                this.data.data[offsets[1]] = clamp(colour.g * 255, 0, 255);
 
-            this.data.data[offset++] = clamp(colour.a * 255, 0, 255);
+                this.data.data[offsets[2]] = clamp(colour.b * 255, 0, 255);
+
+                this.data.data[offsets[3]] = clamp(colour.a * 255, 0, 255);
+            }
         }
     }
 }

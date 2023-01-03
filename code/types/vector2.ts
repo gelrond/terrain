@@ -1,6 +1,8 @@
 // ********************************************************************************************************************
 import * as THREE from 'three';
+// ********************************************************************************************************************
 import { lerp, max, min } from "../helpers/math.helper";
+// ********************************************************************************************************************
 import { IEquality } from '../shared/equality.interface';
 // ********************************************************************************************************************
 export class Vector2 extends THREE.Vector2 implements IEquality<Vector2> {
@@ -26,6 +28,10 @@ export class Vector2 extends THREE.Vector2 implements IEquality<Vector2> {
             const x = max(vector1.x, vector2.x);
 
             const y = max(vector1.y, vector2.y);
+
+            if (x === vector1.x && y === vector1.y) return vector1;
+
+            if (x === vector2.x && y === vector2.y) return vector2;
 
             return new Vector2(x, y);
         }
@@ -70,6 +76,10 @@ export class Vector2 extends THREE.Vector2 implements IEquality<Vector2> {
             const x = min(vector1.x, vector2.x);
 
             const y = min(vector1.y, vector2.y);
+
+            if (x === vector1.x && y === vector1.y) return vector1;
+
+            if (x === vector2.x && y === vector2.y) return vector2;
 
             return new Vector2(x, y);
         }
