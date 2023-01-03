@@ -1,7 +1,12 @@
 // ********************************************************************************************************************
 import { createNoise2D, NoiseFunction2D } from "simplex-noise";
+// ********************************************************************************************************************
 import { Generator } from "../../generators/generator";
+// ********************************************************************************************************************
 import { clampZeroOne } from "../../helpers/math.helper";
+// ********************************************************************************************************************
+import { IProgress } from "../../progress/progress.interface";
+// ********************************************************************************************************************
 import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
 export class TerrainGeneratorSimplex extends Generator<TerrainDataGrid> {
@@ -14,7 +19,7 @@ export class TerrainGeneratorSimplex extends Generator<TerrainDataGrid> {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly size: number = 512, public readonly divisors: number[] = [64, 256, 512]) { super(); }
+    constructor(public readonly progress: IProgress, public readonly size: number = 512, public readonly divisors: number[] = [64, 256, 512]) { super(); }
 
     // ****************************************************************************************************************
     // function:    generate
@@ -27,6 +32,8 @@ export class TerrainGeneratorSimplex extends Generator<TerrainDataGrid> {
 
         const target = new TerrainDataGrid(this.size, this.size);
 
+        this.progress.begin(target.total, 'Seeding');
+
         for (var x = 0; x < this.size; x++) {
 
             for (var y = 0; y < this.size; y++) {
@@ -34,6 +41,8 @@ export class TerrainGeneratorSimplex extends Generator<TerrainDataGrid> {
                 const tgt = target.get(x, y);
 
                 tgt.height = this.getHeight(x, y);
+
+                this.progress.next();
             }
         }
         return target;

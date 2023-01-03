@@ -1,6 +1,10 @@
 // ********************************************************************************************************************
 import { Generator } from "../../generators/generator";
+// ********************************************************************************************************************
 import { random, randomInteger } from "../../helpers/random.helper";
+// ********************************************************************************************************************
+import { IProgress } from "../../progress/progress.interface";
+// ********************************************************************************************************************
 import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
 export class TerrainGeneratorSeed extends Generator<TerrainDataGrid> {
@@ -8,7 +12,7 @@ export class TerrainGeneratorSeed extends Generator<TerrainDataGrid> {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly size: number = 16, public readonly coverage: number = 0.9, public readonly max: number = 1, public readonly min: number = 0.5, public readonly edge: number = 1) { super(); }
+    constructor(public readonly progress: IProgress, public readonly size: number = 16, public readonly coverage: number = 0.9, public readonly max: number = 1, public readonly min: number = 0.5, public readonly edge: number = 1) { super(); }
 
     // ****************************************************************************************************************
     // function:    generate
@@ -29,6 +33,8 @@ export class TerrainGeneratorSeed extends Generator<TerrainDataGrid> {
 
         const coverage = (this.coverage * inner * inner);
 
+        this.progress.begin(coverage, 'Seeding');
+
         // ************************************************************************************************************
         // keep seeding until coverage reached
         // ************************************************************************************************************
@@ -44,6 +50,8 @@ export class TerrainGeneratorSeed extends Generator<TerrainDataGrid> {
             if (tgt.height > 0) continue;
 
             tgt.height = random(this.min, this.max);
+
+            this.progress.next();
 
             pass++;
         }

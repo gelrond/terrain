@@ -21,11 +21,6 @@ export abstract class Progress implements IProgress {
     private percentageInteger: number = 0;
 
     // ****************************************************************************************************************
-    // step - the step
-    // ****************************************************************************************************************
-    private step: number = 0;
-
-    // ****************************************************************************************************************
     // text - the text
     // ****************************************************************************************************************
     private text: string | null = null;
@@ -38,7 +33,10 @@ export abstract class Progress implements IProgress {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor() { }
+    constructor(private step: number) {
+
+        this.step = clamp(this.step, 1, 100);
+    }
 
     // ****************************************************************************************************************
     // function:    begin
@@ -51,15 +49,13 @@ export abstract class Progress implements IProgress {
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    public begin(total: number, text: string | null = null, step: number = 10): void {
+    public begin(total: number, text: string | null = null): void {
 
         this.reset();
 
         this.total = max(1, total);
 
         this.increment = 100.0 / this.total;
-
-        this.step = clamp(step, 1, 100);
 
         this.text = text;
 
@@ -116,8 +112,6 @@ export abstract class Progress implements IProgress {
         this.percentageInteger = 0;
 
         this.percentage = 0;
-
-        this.step = 0;
 
         this.text = null;
 

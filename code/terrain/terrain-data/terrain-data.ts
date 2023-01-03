@@ -1,35 +1,14 @@
 // ********************************************************************************************************************
-import { IEquality } from "../../shared/equality.interface";
 import { Colour } from "../../types/colour";
 // ********************************************************************************************************************
-enum Biomes { UNKNOWN, SEA_BED, BEACH, BEACH_HEAD, PLAIN, GRASS_LAND, FOREST, MOUNTAIN, ICE_CAP }
+export enum Biomes { UNKNOWN, SEA_BED, BEACH, BEACH_HEAD, PLAIN, GRASS_LAND, FOREST, MOUNTAIN, ICE_CAP }
 // ********************************************************************************************************************
-export class TerrainData implements IEquality<TerrainData> {
+export class TerrainData {
 
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
     constructor(public height: number = 0, public biome: Biomes = Biomes.UNKNOWN) { }
-
-    // ****************************************************************************************************************
-    // function:    equals
-    // ****************************************************************************************************************
-    // parameters:  other - the other
-    // ****************************************************************************************************************
-    // returns:     whether equal
-    // ****************************************************************************************************************
-    public equals(other: TerrainData): boolean {
-
-        if (other) {
-
-            var equals = (this.height === other.height);
-
-            if (equals) equals = (this.biome === other.biome);
-
-            return equals;
-        }
-        return false;
-    }
 
     // ****************************************************************************************************************
     // function:    getBiomeColour
@@ -42,21 +21,21 @@ export class TerrainData implements IEquality<TerrainData> {
 
         switch (this.biome) {
 
-            case Biomes.ICE_CAP: return new Colour(255, 255, 255);
+            case Biomes.ICE_CAP: return new Colour(1, 1, 1);
 
-            case Biomes.MOUNTAIN: return new Colour(128, 128, 128);
+            case Biomes.MOUNTAIN: return new Colour(0.5, 0.5, 0.5);
 
-            case Biomes.FOREST: return new Colour(80, 110, 50);
+            case Biomes.FOREST: return new Colour(0.30, 0.45, 0.2);
 
-            case Biomes.GRASS_LAND: return new Colour(10, 160, 0);
+            case Biomes.GRASS_LAND: return new Colour(0, 0.6, 0);
 
-            case Biomes.PLAIN: return new Colour(150, 140, 70);
+            case Biomes.PLAIN: return new Colour(0.6, 0.5, 0.3);
 
-            case Biomes.BEACH_HEAD: return new Colour(220, 180, 100);
+            case Biomes.BEACH_HEAD: return new Colour(0.85, 0.7, 0.4);
 
-            case Biomes.BEACH: return new Colour(200, 190, 150);
+            case Biomes.BEACH: return new Colour(0.85, 0.75, 0.6);
 
-            case Biomes.SEA_BED: return new Colour(90, 200, 220);
+            case Biomes.SEA_BED: return new Colour(0.35, 0.85, 0.85);
         }
         return new Colour();
     }

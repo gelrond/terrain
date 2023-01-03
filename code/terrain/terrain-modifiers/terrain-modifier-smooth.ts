@@ -1,6 +1,10 @@
 // ********************************************************************************************************************
 import { max } from "../../helpers/math.helper";
+// ********************************************************************************************************************
 import { Modifier } from "../../modifiers/modifier";
+// ********************************************************************************************************************
+import { IProgress } from "../../progress/progress.interface";
+// ********************************************************************************************************************
 import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
 export class TerrainModifierSmooth extends Modifier<TerrainDataGrid, TerrainDataGrid> {
@@ -8,7 +12,7 @@ export class TerrainModifierSmooth extends Modifier<TerrainDataGrid, TerrainData
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly passes: number = 1, public readonly distance: number = 3) { super(); }
+    constructor(public readonly progress: IProgress, public readonly passes: number = 1, public readonly distance: number = 3) { super(); }
 
     // ****************************************************************************************************************
     // function:    modify
@@ -23,7 +27,7 @@ export class TerrainModifierSmooth extends Modifier<TerrainDataGrid, TerrainData
 
         for (var pass = 0; pass < this.passes; pass++) {
 
-            source = this.modifyPass(source, radius);
+            source = this.modifyPass(source, radius, pass + 1);
         }
         return source;
     }
@@ -35,15 +39,23 @@ export class TerrainModifierSmooth extends Modifier<TerrainDataGrid, TerrainData
     // ****************************************************************************************************************
     //              radius - the radius
     // ****************************************************************************************************************
+    //              pass - the pass
+    // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modifyPass(source: TerrainDataGrid, radius: number): TerrainDataGrid {
+    public modifyPass(source: TerrainDataGrid, radius: number, pass: number): TerrainDataGrid {
+
+        this.progress.begin(source.total, 'Smoothing - Pass ' + pass);
 
         const target = new TerrainDataGrid(source.sizeX, source.sizeY);
 
         for (var x = 0; x < source.sizeX; x++) {
 
             for (var y = 0; y < source.sizeY; y++) {
+
+                // ****************************************************************************************************
+                // calculate average in area
+                // ****************************************************************************************************
 
                 var height = 0, count = 0;
 
@@ -59,9 +71,16 @@ export class TerrainModifierSmooth extends Modifier<TerrainDataGrid, TerrainData
                         }
                     }
                 }
+
+                // ****************************************************************************************************
+                // update target
+                // ****************************************************************************************************
+
                 const tgt = target.get(x, y);
 
                 tgt.height = height / count;
+
+                this.progress.next();
             }
         }
         return target;

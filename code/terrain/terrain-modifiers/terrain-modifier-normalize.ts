@@ -1,6 +1,10 @@
 // ********************************************************************************************************************
 import { max, min, normalize } from "../../helpers/math.helper";
+// ********************************************************************************************************************
 import { Modifier } from "../../modifiers/modifier";
+// ********************************************************************************************************************
+import { IProgress } from "../../progress/progress.interface";
+// ********************************************************************************************************************
 import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
 export class TerrainModifierNormalize extends Modifier<TerrainDataGrid, TerrainDataGrid> {
@@ -8,7 +12,7 @@ export class TerrainModifierNormalize extends Modifier<TerrainDataGrid, TerrainD
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor() { super(); }
+    constructor(public readonly progress: IProgress) { super(); }
 
     // ****************************************************************************************************************
     // function:    modify
@@ -19,8 +23,10 @@ export class TerrainModifierNormalize extends Modifier<TerrainDataGrid, TerrainD
     // ****************************************************************************************************************
     public modify(source: TerrainDataGrid): TerrainDataGrid {
 
+        this.progress.begin(source.total * 2, 'Normalizing');
+
         // ************************************************************************************************************
-        // obtain minimum and maximum
+        // find minimum and maximum
         // ************************************************************************************************************
 
         var minimum = Number.MAX_SAFE_INTEGER;
@@ -36,6 +42,8 @@ export class TerrainModifierNormalize extends Modifier<TerrainDataGrid, TerrainD
                 minimum = min(minimum, src.height);
 
                 maximum = max(maximum, src.height);
+
+                this.progress.next();
             }
         }
 
@@ -50,6 +58,8 @@ export class TerrainModifierNormalize extends Modifier<TerrainDataGrid, TerrainD
                 var src = source.get(x, y);
 
                 src.height = normalize(src.height, minimum, maximum);
+
+                this.progress.next();
             }
         }
         return source;

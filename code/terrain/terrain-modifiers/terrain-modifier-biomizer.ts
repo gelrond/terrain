@@ -3,9 +3,11 @@ import { Modifier } from "../../modifiers/modifier";
 // ********************************************************************************************************************
 import { IProgress } from "../../progress/progress.interface";
 // ********************************************************************************************************************
+import { Biomes } from "../terrain-data/terrain-data";
+// ********************************************************************************************************************
 import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
-export class TerrainModifierUpscale extends Modifier<TerrainDataGrid, TerrainDataGrid> {
+export class TerrainModifierBiomizer extends Modifier<TerrainDataGrid, TerrainDataGrid> {
 
     // ****************************************************************************************************************
     // constructor
@@ -21,27 +23,37 @@ export class TerrainModifierUpscale extends Modifier<TerrainDataGrid, TerrainDat
     // ****************************************************************************************************************
     public modify(source: TerrainDataGrid): TerrainDataGrid {
 
-        const tx = source.sizeX << 1;
+        this.progress.begin(source.total, 'Biomizing');
 
-        const ty = source.sizeY << 1;
+        for (var x = 0; x < source.sizeX; x++) {
 
-        const target = new TerrainDataGrid(tx, ty);
+            for (var y = 0; y < source.sizeY; y++) {
 
-        this.progress.begin(target.total, 'Upscaling');
+                var src = source.get(x, y);
 
-        for (var x = 0; x < tx; x++) {
+                // ****************************************************************************************************
+                // calculate biome 
+                // ****************************************************************************************************
 
-            for (var y = 0; y < ty; y++) {
+                src.biome = Biomes.SEA_BED;
 
-                const src = source.get(x >> 1, y >> 1);
+                if (src.height >= 0.10) src.biome = Biomes.BEACH;
 
-                const tgt = target.get(x, y);
+                if (src.height >= 0.20) src.biome = Biomes.BEACH_HEAD;
 
-                tgt.height = src.height;
+                if (src.height >= 0.25) src.biome = Biomes.PLAIN;
+
+                if (src.height >= 0.30) src.biome = Biomes.GRASS_LAND;
+
+                if (src.height >= 0.40) src.biome = Biomes.FOREST;
+
+                if (src.height >= 0.50) src.biome = Biomes.MOUNTAIN;
+
+                if (src.height >= 0.60) src.biome = Biomes.ICE_CAP;
 
                 this.progress.next();
             }
         }
-        return target;
+        return source;
     }
 }

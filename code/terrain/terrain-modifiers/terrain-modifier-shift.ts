@@ -1,7 +1,12 @@
 // ********************************************************************************************************************
 import { max, min } from "../../helpers/math.helper";
+// ********************************************************************************************************************
 import { random, randomChance, randomInteger } from "../../helpers/random.helper";
+// ********************************************************************************************************************
 import { Modifier } from "../../modifiers/modifier";
+// ********************************************************************************************************************
+import { IProgress } from "../../progress/progress.interface";
+// ********************************************************************************************************************
 import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
 export class TerrainModifierShift extends Modifier<TerrainDataGrid, TerrainDataGrid> {
@@ -9,7 +14,7 @@ export class TerrainModifierShift extends Modifier<TerrainDataGrid, TerrainDataG
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly shift: number = 0.33, public readonly passes: number = 5) { super(); }
+    constructor(public readonly progress: IProgress, public readonly shift: number = 0.33, public readonly passes: number = 5) { super(); }
 
     // ****************************************************************************************************************
     // function:    modify
@@ -22,7 +27,7 @@ export class TerrainModifierShift extends Modifier<TerrainDataGrid, TerrainDataG
 
         for (var pass = 0; pass < this.passes; pass++) {
 
-            source = this.modifyPass(source);
+            source = this.modifyPass(source, pass + 1);
         }
         return source;
     }
@@ -32,9 +37,13 @@ export class TerrainModifierShift extends Modifier<TerrainDataGrid, TerrainDataG
     // ****************************************************************************************************************
     // parameters:  source - the source
     // ****************************************************************************************************************
+    //              pass - the pass
+    // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modifyPass(source: TerrainDataGrid): TerrainDataGrid {
+    public modifyPass(source: TerrainDataGrid, pass: number): TerrainDataGrid {
+
+        this.progress.begin(source.total, 'Shifting - Pass ' + pass);
 
         const target = new TerrainDataGrid(source.sizeX, source.sizeY);
 
@@ -96,6 +105,7 @@ export class TerrainModifierShift extends Modifier<TerrainDataGrid, TerrainDataG
                         }
                     }
                 }
+                this.progress.next();
             }
         }
         return target;

@@ -1,22 +1,35 @@
 // ********************************************************************************************************************
 import { createNoise3D, NoiseFunction3D } from 'simplex-noise';
+// ********************************************************************************************************************
 import * as THREE from 'three';
+// ********************************************************************************************************************
 import { FogExp2 } from 'three';
+// ********************************************************************************************************************
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// ********************************************************************************************************************
 import { ProgressConsole } from './code/progress/progress-console';
+// ********************************************************************************************************************
 import { TerrainDataProvider } from './code/terrain/terrain-data/terrain-data-provider';
+// ********************************************************************************************************************
 import { TerrainGeneratorSeed } from './code/terrain/terrain-generators/terrain-generator-seed';
+// ********************************************************************************************************************
+import { TerrainModifierBiomizer } from './code/terrain/terrain-modifiers/terrain-modifier-biomizer';
+// ********************************************************************************************************************
 import { TerrainModifierNormalize } from './code/terrain/terrain-modifiers/terrain-modifier-normalize';
+// ********************************************************************************************************************
 import { TerrainModifierShift } from './code/terrain/terrain-modifiers/terrain-modifier-shift';
+// ********************************************************************************************************************
 import { TerrainModifierSmooth } from './code/terrain/terrain-modifiers/terrain-modifier-smooth';
+// ********************************************************************************************************************
 import { TerrainModifierUpscale } from './code/terrain/terrain-modifiers/terrain-modifier-upscale';
+// ********************************************************************************************************************
 import { TerrainPatchGrid } from './code/terrain/terrain-patch-grid';
 // ********************************************************************************************************************
 
 // ********************************************************************************************************************
 // progress
 // ********************************************************************************************************************
-const progress = new ProgressConsole();
+const progress = new ProgressConsole(25);
 
 // ********************************************************************************************************************
 // noise
@@ -72,17 +85,19 @@ ocean.position.y = 8;
 // ********************************************************************************************************************
 // terrain generation
 // ********************************************************************************************************************
-var terrainGrid = new TerrainGeneratorSeed().generate();
+var terrainGrid = new TerrainGeneratorSeed(progress).generate();
 
 while (terrainGrid.sizeX < 1024) {
 
-    terrainGrid = new TerrainModifierUpscale().modify(terrainGrid);
+    terrainGrid = new TerrainModifierUpscale(progress).modify(terrainGrid);
 
-    terrainGrid = new TerrainModifierShift().modify(terrainGrid);
+    terrainGrid = new TerrainModifierShift(progress).modify(terrainGrid);
 }
-terrainGrid = new TerrainModifierSmooth().modify(terrainGrid);
+terrainGrid = new TerrainModifierSmooth(progress).modify(terrainGrid);
 
-terrainGrid = new TerrainModifierNormalize().modify(terrainGrid);
+terrainGrid = new TerrainModifierNormalize(progress).modify(terrainGrid);
+
+terrainGrid = new TerrainModifierBiomizer(progress).modify(terrainGrid);
 
 // ********************************************************************************************************************
 // terrain

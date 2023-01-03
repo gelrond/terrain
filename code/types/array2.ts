@@ -16,13 +16,18 @@ export abstract class Array2<_TType> {
     private readonly offsets: number[] = [];
 
     // ****************************************************************************************************************
+    // total - the total
+    // ****************************************************************************************************************
+    public readonly total: number = 0;
+
+    // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
     constructor(public readonly sizeX: number, public readonly sizeY: number, createDefaults: boolean = false) {
 
-        const count = sizeX * sizeY; var index = 0;
+        this.total = sizeX * sizeY; var index = 0;
 
-        for (var i = 0; i < count; i++, index += sizeX) {
+        for (var i = 0; i < this.total; i++, index += sizeX) {
 
             if (createDefaults) this.array[i] = this.createDefault();
 

@@ -1,7 +1,10 @@
 // ********************************************************************************************************************
 import { clampZeroOne } from '../../helpers/math.helper';
+// ********************************************************************************************************************
 import { Colour } from '../../types/colour';
+// ********************************************************************************************************************
 import { TerrainProvider } from '../terrain-provider';
+// ********************************************************************************************************************
 import { TerrainDataGrid } from './terrain-data-grid';
 // ********************************************************************************************************************
 export class TerrainDataProvider extends TerrainProvider {
@@ -39,9 +42,9 @@ export class TerrainDataProvider extends TerrainProvider {
     // ****************************************************************************************************************
     public getColour(x: number, y: number): Colour {
 
-        const cell = this.grid.get(this.offsetX + x, this.offsetY + y);
+        const data = this.grid.get(this.offsetX + x, this.offsetY + y);
 
-        return cell.getBiomeColour();
+        return data.getBiomeColour();
     }
 
     // ****************************************************************************************************************
@@ -55,8 +58,8 @@ export class TerrainDataProvider extends TerrainProvider {
     // ****************************************************************************************************************
     public getHeight(x: number, y: number): number {
 
-        const cell = this.grid.get(this.offsetX + x, this.offsetY + y);
+        const data = this.grid.get(this.offsetX + x, this.offsetY + y);
 
-        return clampZeroOne(cell?.height ?? 0);
+        return clampZeroOne(data?.height ?? 0);
     }
 }
