@@ -1,8 +1,8 @@
 // ********************************************************************************************************************
 import { Modifier } from "../../modifiers/modifier";
-import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
+import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
-export class TerrainModifierUpscale extends Modifier<TerrainCellGrid, TerrainCellGrid> {
+export class TerrainModifierUpscale extends Modifier<TerrainDataGrid, TerrainDataGrid> {
 
     // ****************************************************************************************************************
     // constructor
@@ -16,13 +16,13 @@ export class TerrainModifierUpscale extends Modifier<TerrainCellGrid, TerrainCel
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modify(source: TerrainCellGrid): TerrainCellGrid {
+    public modify(source: TerrainDataGrid): TerrainDataGrid {
 
         const tx = source.sizeX << 1;
 
         const ty = source.sizeY << 1;
 
-        const target = new TerrainCellGrid(tx, ty);
+        const target = new TerrainDataGrid(tx, ty);
 
         for (var x = 0; x < tx; x++) {
 

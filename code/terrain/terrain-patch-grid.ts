@@ -2,8 +2,8 @@
 import { Mesh, Scene } from 'three';
 import { IProgress } from '../progress/progress.interface';
 import { Vector2 } from '../types/vector2';
-import { ITerrainHeights } from './terrain-heights.interface';
 import { TerrainPatch } from './terrain-patch';
+import { ITerrainProvider } from './terrain-provider.interface';
 // ********************************************************************************************************************
 export class TerrainPatchGrid {
 
@@ -17,11 +17,13 @@ export class TerrainPatchGrid {
     // ****************************************************************************************************************
     // parameters:  scene - the scene
     // ****************************************************************************************************************
-    //              heights - the heights
+    //              provider - the provider
+    // ****************************************************************************************************************
+    //              progress - the progress
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    public create(scene: Scene, heights: ITerrainHeights, progress: IProgress): void {
+    public create(scene: Scene, provider: ITerrainProvider, progress: IProgress): void {
 
         // ************************************************************************************************************
         // setup variables
@@ -75,7 +77,7 @@ export class TerrainPatchGrid {
                 // create patch
                 // ****************************************************************************************************
 
-                patches[x][y] = new TerrainPatch(pointNw, pointNe, pointSw, pointSe, heights);
+                patches[x][y] = new TerrainPatch(pointNw, pointNe, pointSw, pointSe, provider);
             }
         }
 

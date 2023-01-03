@@ -1,9 +1,9 @@
 // ********************************************************************************************************************
 import { max, min, normalize } from "../../helpers/math.helper";
 import { Modifier } from "../../modifiers/modifier";
-import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
+import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
-export class TerrainModifierNormalize extends Modifier<TerrainCellGrid, TerrainCellGrid> {
+export class TerrainModifierNormalize extends Modifier<TerrainDataGrid, TerrainDataGrid> {
 
     // ****************************************************************************************************************
     // constructor
@@ -17,7 +17,7 @@ export class TerrainModifierNormalize extends Modifier<TerrainCellGrid, TerrainC
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modify(source: TerrainCellGrid): TerrainCellGrid {
+    public modify(source: TerrainDataGrid): TerrainDataGrid {
 
         // ************************************************************************************************************
         // obtain minimum and maximum

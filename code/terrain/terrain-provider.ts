@@ -4,11 +4,11 @@ import { abs, clampZeroOne, max, min } from '../helpers/math.helper';
 import { Colour } from '../types/colour';
 import { Vector2 } from '../types/vector2';
 import { Vector3 } from '../types/vector3';
-import { ITerrainHeights } from './terrain-heights.interface';
+import { ITerrainProvider } from './terrain-provider.interface';
 import { TerrainVariance } from './terrain-variance';
 import { ITerrainVariance } from './terrain-variance.interface';
 // ********************************************************************************************************************
-export class TerrainHeights implements ITerrainHeights {
+export class TerrainProvider implements ITerrainProvider {
 
     // ****************************************************************************************************************
     // noise - the noise
@@ -47,7 +47,7 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     // returns:     the gradient
     // ****************************************************************************************************************
-    public getGradient(x: number, y: number, multiplier: number = 16): Vector2 {
+    public getGradient(x: number, y: number, multiplier: number = 8): Vector2 {
 
         // ************************************************************************************************************
         // obtain heights
@@ -103,7 +103,7 @@ export class TerrainHeights implements ITerrainHeights {
     // ****************************************************************************************************************
     // returns:     the normal
     // ****************************************************************************************************************
-    public getNormal(x: number, y: number, multiplier: number = 16): Vector3 {
+    public getNormal(x: number, y: number, multiplier: number = 8): Vector3 {
 
         const gradient = this.getGradient(x, y, multiplier);
 

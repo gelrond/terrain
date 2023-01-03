@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { FogExp2 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ProgressConsole } from './code/progress/progress-console';
-import { TerrainCellGridHeights } from './code/terrain/terrain-cell/terrain-cell-grid-heights';
+import { TerrainDataProvider } from './code/terrain/terrain-data/terrain-data-provider';
 import { TerrainGeneratorSeed } from './code/terrain/terrain-generators/terrain-generator-seed';
 import { TerrainModifierNormalize } from './code/terrain/terrain-modifiers/terrain-modifier-normalize';
 import { TerrainModifierShift } from './code/terrain/terrain-modifiers/terrain-modifier-shift';
@@ -55,7 +55,6 @@ scene.add(sun);
 // ********************************************************************************************************************
 // ocean
 // ********************************************************************************************************************
-
 const oceanGeometry = new THREE.PlaneGeometry(1024, 1024, 256, 256);
 
 oceanGeometry.rotateX(THREE.MathUtils.degToRad(-90));
@@ -88,14 +87,13 @@ terrainGrid = new TerrainModifierNormalize().modify(terrainGrid);
 // ********************************************************************************************************************
 // terrain
 // ********************************************************************************************************************
-
-const terrainHeights = new TerrainCellGridHeights(terrainGrid);
+const terrainProvider = new TerrainDataProvider(terrainGrid);
 
 // const terrainHeights = new TerrainHeights();
 
 const terrain = new TerrainPatchGrid(32, 32, 50);
 
-terrain.create(scene, terrainHeights, progress);
+terrain.create(scene, terrainProvider, progress);
 
 // ********************************************************************************************************************
 // initialise

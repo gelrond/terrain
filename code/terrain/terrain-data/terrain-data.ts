@@ -4,7 +4,7 @@ import { Colour } from "../../types/colour";
 // ********************************************************************************************************************
 enum Biomes { UNKNOWN, SEA_BED, BEACH, BEACH_HEAD, PLAIN, GRASS_LAND, FOREST, MOUNTAIN, ICE_CAP }
 // ********************************************************************************************************************
-export class TerrainCell implements IEquality<TerrainCell> {
+export class TerrainData implements IEquality<TerrainData> {
 
     // ****************************************************************************************************************
     // constructor
@@ -18,7 +18,7 @@ export class TerrainCell implements IEquality<TerrainCell> {
     // ****************************************************************************************************************
     // returns:     whether equal
     // ****************************************************************************************************************
-    public equals(other: TerrainCell): boolean {
+    public equals(other: TerrainData): boolean {
 
         if (other) {
 

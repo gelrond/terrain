@@ -1,10 +1,10 @@
 // ********************************************************************************************************************
-import { clampZeroOne } from "../../helpers/math.helper";
-import { Colour } from "../../types/colour";
-import { TerrainHeights } from "../terrain-heights";
-import { TerrainCellGrid } from "./terrain-cell-grid";
+import { clampZeroOne } from '../../helpers/math.helper';
+import { Colour } from '../../types/colour';
+import { TerrainProvider } from '../terrain-provider';
+import { TerrainDataGrid } from './terrain-data-grid';
 // ********************************************************************************************************************
-export class TerrainCellGridHeights extends TerrainHeights {
+export class TerrainDataProvider extends TerrainProvider {
 
     // ****************************************************************************************************************
     // offsetX - the offset x
@@ -19,7 +19,7 @@ export class TerrainCellGridHeights extends TerrainHeights {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(private readonly grid: TerrainCellGrid) {
+    constructor(private readonly grid: TerrainDataGrid) {
 
         super();
 

@@ -9,7 +9,7 @@ import { Canvas } from '../types/canvas';
 import { Colour } from '../types/colour';
 import { Vector2 } from '../types/vector2';
 import { Vector2List } from '../types/vector2-list';
-import { ITerrainHeights } from './terrain-heights.interface';
+import { ITerrainProvider } from './terrain-provider.interface';
 import { ITerrainVariance } from './terrain-variance.interface';
 // ********************************************************************************************************************
 enum Neighbour { N, E, S, W }
@@ -39,7 +39,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(private readonly pointNw: Vector2, private readonly pointNe: Vector2, private readonly pointSw: Vector2, private readonly pointSe: Vector2, private readonly heights: ITerrainHeights, private readonly root: TerrainPatch | null = null) {
+    constructor(private readonly pointNw: Vector2, private readonly pointNe: Vector2, private readonly pointSw: Vector2, private readonly pointSe: Vector2, private readonly provider: ITerrainProvider, private readonly root: TerrainPatch | null = null) {
 
         super(pointNw, pointSe);
 
@@ -231,11 +231,11 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
                 // obtain geometry
                 // ****************************************************************************************************
 
-                const height = this.heights.getHeight(point.x, point.y);
+                const height = this.provider.getHeight(point.x, point.y);
 
                 const position = new Vector3(point.x, height * ceiling, point.y);
 
-                const colour = this.heights.getColour(point.x, point.y);
+                const colour = this.provider.getColour(point.x, point.y);
 
                 const normal = new Vector3(0, 1, 0);
 
@@ -302,7 +302,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
                 const py = this.pointNw.y + (y * oy);
 
-                const normal = this.heights.getNormal(px, py);
+                const normal = this.provider.getNormal(px, py);
 
                 // ****************************************************************************************************
                 // obtain colour
@@ -443,13 +443,13 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
             // obtain patches
             // ********************************************************************************************************
 
-            const patchNw = new TerrainPatch(this.pointNw, pointN, pointW, this.center, this.heights, this.root);
+            const patchNw = new TerrainPatch(this.pointNw, pointN, pointW, this.center, this.provider, this.root);
 
-            const patchNe = new TerrainPatch(pointN, this.pointNe, this.center, pointE, this.heights, this.root);
+            const patchNe = new TerrainPatch(pointN, this.pointNe, this.center, pointE, this.provider, this.root);
 
-            const patchSw = new TerrainPatch(pointW, this.center, this.pointSw, pointS, this.heights, this.root);
+            const patchSw = new TerrainPatch(pointW, this.center, this.pointSw, pointS, this.provider, this.root);
 
-            const patchSe = new TerrainPatch(this.center, pointE, pointS, this.pointSe, this.heights, this.root);
+            const patchSe = new TerrainPatch(this.center, pointE, pointS, this.pointSe, this.provider, this.root);
 
             // ********************************************************************************************************
             // obtain neighbours
@@ -483,7 +483,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     public tesselate(multiplier: number = 0.1, limiter: number = 0.1): void {
 
-        this.variance = this.heights.getVariance(this.pointNw.x, this.pointNw.y, this.pointSe.x, this.pointSe.y, limiter);
+        this.variance = this.provider.getVariance(this.pointNw.x, this.pointNw.y, this.pointSe.x, this.pointSe.y, limiter);
 
         if (this.variance) this.tesselateInternal(this.variance, this.variance.variance * multiplier);
     }

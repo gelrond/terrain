@@ -1,9 +1,9 @@
 // ********************************************************************************************************************
 import { Generator } from "../../generators/generator";
 import { random, randomInteger } from "../../helpers/random.helper";
-import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
+import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
-export class TerrainGeneratorSeed extends Generator<TerrainCellGrid> {
+export class TerrainGeneratorSeed extends Generator<TerrainDataGrid> {
 
     // ****************************************************************************************************************
     // constructor
@@ -17,13 +17,13 @@ export class TerrainGeneratorSeed extends Generator<TerrainCellGrid> {
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public generate(): TerrainCellGrid {
+    public generate(): TerrainDataGrid {
 
         // ************************************************************************************************************
         // setup variables
         // ************************************************************************************************************
 
-        const target = new TerrainCellGrid(this.size, this.size);
+        const target = new TerrainDataGrid(this.size, this.size);
 
         const inner = this.size - (this.edge << 1);
 

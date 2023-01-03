@@ -4,7 +4,7 @@ import { Vector2 } from "../types/vector2";
 import { Vector3 } from "../types/vector3";
 import { ITerrainVariance } from "./terrain-variance.interface";
 // ********************************************************************************************************************
-export interface ITerrainHeights {
+export interface ITerrainProvider {
     getColour(x: number, y: number): Colour;
     getGradient(x: number, y: number): Vector2;
     getHeight(x: number, y: number): number;

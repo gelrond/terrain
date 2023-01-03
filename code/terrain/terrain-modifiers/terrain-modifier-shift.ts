@@ -2,9 +2,9 @@
 import { max, min } from "../../helpers/math.helper";
 import { random, randomChance, randomInteger } from "../../helpers/random.helper";
 import { Modifier } from "../../modifiers/modifier";
-import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
+import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
-export class TerrainModifierShift extends Modifier<TerrainCellGrid, TerrainCellGrid> {
+export class TerrainModifierShift extends Modifier<TerrainDataGrid, TerrainDataGrid> {
 
     // ****************************************************************************************************************
     // constructor
@@ -18,7 +18,7 @@ export class TerrainModifierShift extends Modifier<TerrainCellGrid, TerrainCellG
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modify(source: TerrainCellGrid): TerrainCellGrid {
+    public modify(source: TerrainDataGrid): TerrainDataGrid {
 
         for (var pass = 0; pass < this.passes; pass++) {
 
@@ -34,9 +34,9 @@ export class TerrainModifierShift extends Modifier<TerrainCellGrid, TerrainCellG
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modifyPass(source: TerrainCellGrid): TerrainCellGrid {
+    public modifyPass(source: TerrainDataGrid): TerrainDataGrid {
 
-        const target = new TerrainCellGrid(source.sizeX, source.sizeY);
+        const target = new TerrainDataGrid(source.sizeX, source.sizeY);
 
         const sx = 1; const ex = source.sizeX - 2;
 

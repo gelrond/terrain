@@ -1,9 +1,9 @@
 // ********************************************************************************************************************
 import { max } from "../../helpers/math.helper";
 import { Modifier } from "../../modifiers/modifier";
-import { TerrainCellGrid } from "../terrain-cell/terrain-cell-grid";
+import { TerrainDataGrid } from "../terrain-data/terrain-data-grid";
 // ********************************************************************************************************************
-export class TerrainModifierSmooth extends Modifier<TerrainCellGrid, TerrainCellGrid> {
+export class TerrainModifierSmooth extends Modifier<TerrainDataGrid, TerrainDataGrid> {
 
     // ****************************************************************************************************************
     // constructor
@@ -17,7 +17,7 @@ export class TerrainModifierSmooth extends Modifier<TerrainCellGrid, TerrainCell
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modify(source: TerrainCellGrid): TerrainCellGrid {
+    public modify(source: TerrainDataGrid): TerrainDataGrid {
 
         const radius = max(1, this.distance >> 1);
 
@@ -37,9 +37,9 @@ export class TerrainModifierSmooth extends Modifier<TerrainCellGrid, TerrainCell
     // ****************************************************************************************************************
     // returns:     the target
     // ****************************************************************************************************************
-    public modifyPass(source: TerrainCellGrid, radius: number): TerrainCellGrid {
+    public modifyPass(source: TerrainDataGrid, radius: number): TerrainDataGrid {
 
-        const target = new TerrainCellGrid(source.sizeX, source.sizeY);
+        const target = new TerrainDataGrid(source.sizeX, source.sizeY);
 
         for (var x = 0; x < source.sizeX; x++) {
 
