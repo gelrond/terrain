@@ -35,7 +35,7 @@ export class TerrainData {
 
             case Biomes.BEACH: return new Colour(0.85, 0.75, 0.6);
 
-            case Biomes.SEA_BED: return new Colour(0.35, 0.85, 0.85);
+            case Biomes.SEA_BED: return new Colour(0.85, 0.5, 0.3);
         }
         return new Colour();
     }

@@ -1,11 +1,18 @@
 // ********************************************************************************************************************
 import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
+// ********************************************************************************************************************
 import { abs, clampZeroOne, max, min } from '../helpers/math.helper';
+// ********************************************************************************************************************
 import { Colour } from '../types/colour';
+// ********************************************************************************************************************
 import { Vector2 } from '../types/vector2';
+// ********************************************************************************************************************
 import { Vector3 } from '../types/vector3';
+// ********************************************************************************************************************
 import { ITerrainProvider } from './terrain-provider.interface';
+// ********************************************************************************************************************
 import { TerrainVariance } from './terrain-variance';
+// ********************************************************************************************************************
 import { ITerrainVariance } from './terrain-variance.interface';
 // ********************************************************************************************************************
 export class TerrainProvider implements ITerrainProvider {
@@ -62,7 +69,7 @@ export class TerrainProvider implements ITerrainProvider {
         const heightW = this.getHeight(x - 1, y) * multiplier;
 
         // ************************************************************************************************************
-        // obtain heights
+        // obtain gradient
         // ************************************************************************************************************
 
         var gx = (heightE - heightW);
@@ -107,7 +114,7 @@ export class TerrainProvider implements ITerrainProvider {
 
         const gradient = this.getGradient(x, y, multiplier);
 
-        const normal = new Vector3(gradient.x, 1, gradient.y).normalize();
+        const normal = new Vector3(gradient.x, 1, gradient.y);
 
         return normal;
     }
@@ -138,7 +145,7 @@ export class TerrainProvider implements ITerrainProvider {
         var maximum = Number.MIN_SAFE_INTEGER;
 
         // ************************************************************************************************************
-        // obtain minimum and maximum heights
+        // obtain minimum and maximum
         // ************************************************************************************************************
 
         for (var x = x1; x <= x2; x++) {
@@ -154,7 +161,7 @@ export class TerrainProvider implements ITerrainProvider {
         }
 
         // ************************************************************************************************************
-        // obtain variance
+        // obtain difference
         // ************************************************************************************************************
 
         const difference = abs(maximum - minimum);
@@ -164,7 +171,7 @@ export class TerrainProvider implements ITerrainProvider {
         const variance = new TerrainVariance(difference);
 
         // ************************************************************************************************************
-        // obtain children
+        // check level
         // ************************************************************************************************************
 
         const dx = abs(x2 - x1);
@@ -174,6 +181,10 @@ export class TerrainProvider implements ITerrainProvider {
         if (dx <= 1) return variance;
 
         if (dy <= 1) return variance;
+
+        // ************************************************************************************************************
+        // find children
+        // ************************************************************************************************************
 
         const cx = x1 + (dx >> 1);
 

@@ -82,33 +82,37 @@ ocean.position.y = 8;
 
 // scene.add(ocean);
 
-// ********************************************************************************************************************
-// terrain generation
-// ********************************************************************************************************************
-var terrainGrid = new TerrainGeneratorSeed(progress).generate();
+setTimeout(() => {
 
-while (terrainGrid.sizeX < 1024) {
+    // ****************************************************************************************************************
+    // terrain generation
+    // ****************************************************************************************************************
 
-    terrainGrid = new TerrainModifierUpscale(progress).modify(terrainGrid);
+    var terrainGrid = new TerrainGeneratorSeed(progress).generate();
 
-    terrainGrid = new TerrainModifierShift(progress).modify(terrainGrid);
-}
-terrainGrid = new TerrainModifierSmooth(progress).modify(terrainGrid);
+    while (terrainGrid.sizeX < 1024) {
 
-terrainGrid = new TerrainModifierNormalize(progress).modify(terrainGrid);
+        terrainGrid = new TerrainModifierUpscale(progress).modify(terrainGrid);
 
-terrainGrid = new TerrainModifierBiomizer(progress).modify(terrainGrid);
+        terrainGrid = new TerrainModifierShift(progress).modify(terrainGrid);
+    }
+    terrainGrid = new TerrainModifierSmooth(progress).modify(terrainGrid);
 
-// ********************************************************************************************************************
-// terrain
-// ********************************************************************************************************************
-const terrainProvider = new TerrainDataProvider(terrainGrid);
+    terrainGrid = new TerrainModifierNormalize(progress).modify(terrainGrid);
 
-// const terrainHeights = new TerrainHeights();
+    terrainGrid = new TerrainModifierBiomizer(progress).modify(terrainGrid);
 
-const terrain = new TerrainPatchGrid(32, 32, 50);
+    const terrainProvider = new TerrainDataProvider(terrainGrid);
 
-terrain.create(scene, terrainProvider, progress);
+    // ****************************************************************************************************************
+    // terrain
+    // *****************************************************************************************************************
+
+    const terrain = new TerrainPatchGrid(32, 32, 50);
+
+    terrain.create(scene, terrainProvider, progress);
+
+}, 500);
 
 // ********************************************************************************************************************
 // initialise
