@@ -1,5 +1,6 @@
 // ********************************************************************************************************************
 import { clamp, max, round } from "../helpers/math.helper";
+// ********************************************************************************************************************
 import { IProgress } from "./progress.interface";
 // ********************************************************************************************************************
 export abstract class Progress implements IProgress {
@@ -10,14 +11,14 @@ export abstract class Progress implements IProgress {
     private increment: number = 0;
 
     // ****************************************************************************************************************
-    // index - the index
-    // ****************************************************************************************************************
-    private index: number = 0;
-
-    // ****************************************************************************************************************
     // percentage - the percentage
     // ****************************************************************************************************************
     private percentage: number = 0;
+
+    // ****************************************************************************************************************
+    // percentageInteger - the percentage integer
+    // ****************************************************************************************************************
+    private percentageInteger: number = 0;
 
     // ****************************************************************************************************************
     // step - the step
@@ -50,7 +51,7 @@ export abstract class Progress implements IProgress {
     // ****************************************************************************************************************
     // returns:     n/a
     // ****************************************************************************************************************
-    public begin(total: number, text: string | null = null, step: number = 1): void {
+    public begin(total: number, text: string | null = null, step: number = 10): void {
 
         this.reset();
 
@@ -78,15 +79,13 @@ export abstract class Progress implements IProgress {
 
             this.percentage += this.increment;
 
-            const index = round(this.percentage);
+            const percentageInteger = round(this.percentage);
 
-            if (this.index != index) {
+            if (this.percentageInteger != percentageInteger) {
 
-                this.index = index;
+                if (((this.percentageInteger = percentageInteger) % this.step) == 0) {
 
-                if ((this.index % this.step) == 0) {
-
-                    this.render(index, this.text);
+                    this.render(percentageInteger, this.text);
                 }
             }
         }
@@ -114,7 +113,7 @@ export abstract class Progress implements IProgress {
 
         this.increment = 0;
 
-        this.index = 0;
+        this.percentageInteger = 0;
 
         this.percentage = 0;
 
