@@ -41,16 +41,16 @@ const noise: NoiseFunction3D = createNoise3D();
 // ********************************************************************************************************************
 const scene = new THREE.Scene();
 
-scene.background = new THREE.Color('#333333');
+scene.background = new THREE.Color('#add3ff');
 
-scene.fog = new FogExp2('#a0a0a0', 0.001)
+scene.fog = new FogExp2('#add3ff', 0.002)
 
 const renderer = new THREE.WebGLRenderer();
 
 // ********************************************************************************************************************
 // camera
 // ********************************************************************************************************************
-const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 2000);
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
 
 camera.position.y = 200; camera.position.z = 256;
 
@@ -59,7 +59,7 @@ new OrbitControls(camera, renderer.domElement);
 // ********************************************************************************************************************
 // lighting
 // ********************************************************************************************************************
-const sun = new THREE.DirectionalLight('#f0f0e0', 1.0);
+const sun = new THREE.DirectionalLight('#fff0e0', 1.0);
 
 sun.position.z = -100; sun.position.y = 64;
 
@@ -72,47 +72,40 @@ const oceanGeometry = new THREE.PlaneGeometry(1024, 1024, 256, 256);
 
 oceanGeometry.rotateX(THREE.MathUtils.degToRad(-90));
 
-const oceanMaterial = new THREE.MeshStandardMaterial({ color: '#3366a0', envMapIntensity: 4, roughness: 0.33, metalness: 0, transparent: true, opacity: 0.33, wireframe: false });
+const oceanMaterial = new THREE.MeshStandardMaterial({ color: '#3366a0', roughness: 0.2, metalness: 0, transparent: true, opacity: 0.8, wireframe: false });
 
 const ocean = new THREE.Mesh(oceanGeometry, oceanMaterial);
 
-var oceanPass = 0;
+var oceanPass = 0; ocean.position.y = 8;
 
-ocean.position.y = 8;
+scene.add(ocean);
 
-// scene.add(ocean);
+// ********************************************************************************************************************
+// terrain generation
+// ********************************************************************************************************************
+var terrainGrid = new TerrainGeneratorSeed(progress).generate();
 
-setTimeout(() => {
+while (terrainGrid.sizeX < 1024) {
 
-    // ****************************************************************************************************************
-    // terrain generation
-    // ****************************************************************************************************************
+    terrainGrid = new TerrainModifierUpscale(progress).modify(terrainGrid);
 
-    var terrainGrid = new TerrainGeneratorSeed(progress).generate();
+    terrainGrid = new TerrainModifierShift(progress).modify(terrainGrid);
+}
+terrainGrid = new TerrainModifierSmooth(progress).modify(terrainGrid);
 
-    while (terrainGrid.sizeX < 1024) {
+terrainGrid = new TerrainModifierNormalize(progress).modify(terrainGrid);
 
-        terrainGrid = new TerrainModifierUpscale(progress).modify(terrainGrid);
+terrainGrid = new TerrainModifierBiomizer(progress).modify(terrainGrid);
 
-        terrainGrid = new TerrainModifierShift(progress).modify(terrainGrid);
-    }
-    terrainGrid = new TerrainModifierSmooth(progress).modify(terrainGrid);
+const terrainProvider = new TerrainDataProvider(terrainGrid);
 
-    terrainGrid = new TerrainModifierNormalize(progress).modify(terrainGrid);
+// ********************************************************************************************************************
+// terrain
+// ********************************************************************************************************************
 
-    terrainGrid = new TerrainModifierBiomizer(progress).modify(terrainGrid);
+const terrain = new TerrainPatchGrid(16, 64, 40);
 
-    const terrainProvider = new TerrainDataProvider(terrainGrid);
-
-    // ****************************************************************************************************************
-    // terrain
-    // *****************************************************************************************************************
-
-    const terrain = new TerrainPatchGrid(32, 32, 50);
-
-    terrain.create(scene, terrainProvider, progress);
-
-}, 500);
+terrain.create(scene, terrainProvider, progress);
 
 // ********************************************************************************************************************
 // initialise
@@ -177,5 +170,4 @@ function updateOcean() {
 
     oceanGeometry.attributes.position.needsUpdate = true;
 }
-
 initialise();

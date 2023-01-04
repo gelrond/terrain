@@ -1,5 +1,5 @@
 // ********************************************************************************************************************
-import { BufferGeometry, Material, MeshStandardMaterial, Texture, Vector3 } from 'three';
+import { BufferGeometry, Material, MeshStandardMaterial, Texture, TextureLoader, Vector3 } from 'three';
 // ********************************************************************************************************************
 import { GeometryBuilder } from '../geometry/geometry-builder';
 // ********************************************************************************************************************
@@ -271,7 +271,9 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
         const normalMap = this.createNormalMap();
 
-        const result = new MeshStandardMaterial({ roughness: 1.0, normalMap: normalMap, vertexColors: true, wireframe: false });
+        const detailMap = new TextureLoader().load('/resources/detail.png');
+
+        const result = new MeshStandardMaterial({ roughness: 1.0, bumpMap: detailMap, map: detailMap, normalMap: normalMap, vertexColors: true, wireframe: false });
 
         return result;
     }
@@ -283,7 +285,7 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     // ****************************************************************************************************************
     // returns:     the normal map
     // ****************************************************************************************************************
-    public createNormalMap(size: number = 32): Texture {
+    public createNormalMap(size: number = 64): Texture {
 
         // ************************************************************************************************************
         // setup variables

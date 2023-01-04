@@ -38,19 +38,19 @@ export class TerrainModifierBiomizer extends Modifier<TerrainDataGrid, TerrainDa
 
                 src.biome = Biomes.SEA_BED;
 
-                if (src.height >= 0.10 && randomChance(0.1)) src.biome = Biomes.BEACH;
+                if (src.height >= 0.10 && randomChance(0.2)) src.biome = Biomes.BEACH;
 
-                if (src.height >= 0.20 && randomChance(0.1)) src.biome = Biomes.BEACH_HEAD;
+                if (src.height >= 0.20 && randomChance(0.2)) src.biome = Biomes.BEACH_HEAD;
 
-                if (src.height >= 0.25 && randomChance(0.1)) src.biome = Biomes.PLAIN;
+                if (src.height >= 0.25 && randomChance(0.2)) src.biome = Biomes.PLAIN;
 
-                if (src.height >= 0.30 && randomChance(0.1)) src.biome = Biomes.GRASS_LAND;
+                if (src.height >= 0.30 && randomChance(0.2)) src.biome = Biomes.GRASS_LAND;
 
-                if (src.height >= 0.40 && randomChance(0.1)) src.biome = Biomes.FOREST;
+                if (src.height >= 0.40 && randomChance(0.2)) src.biome = Biomes.FOREST;
 
-                if (src.height >= 0.50 && randomChance(0.1)) src.biome = Biomes.MOUNTAIN;
+                if (src.height >= 0.50 && randomChance(0.2)) src.biome = Biomes.MOUNTAIN;
 
-                if (src.height >= 0.60 && randomChance(0.1)) src.biome = Biomes.ICE_CAP;
+                if (src.height >= 0.60 && randomChance(0.2)) src.biome = Biomes.ICE_CAP;
 
                 this.progress.next();
             }
