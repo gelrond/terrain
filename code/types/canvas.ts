@@ -45,13 +45,15 @@ export class Canvas {
     }
 
     // ****************************************************************************************************************
-    // function:    getTexture
+    // function:    createCanvas
     // ****************************************************************************************************************
-    // parameters:  wrapping - the wrapping
+    // parameters:  sizeX - the size x 
     // ****************************************************************************************************************
-    // returns:     the texture
+    //              sizeY - the size y
     // ****************************************************************************************************************
-    public getTexture(wrapping: THREE.Wrapping = THREE.ClampToEdgeWrapping): THREE.Texture {
+    // returns:     the canvas context
+    // ****************************************************************************************************************
+    private createCanvas(sizeX: number, sizeY: number): CanvasRenderingContext2D | null {
 
         const canvas = document.createElement('canvas');
 
@@ -59,10 +61,51 @@ export class Canvas {
 
         if (context) {
 
-            canvas.width = this.sizeX; canvas.height = this.sizeY;
+            canvas.width = sizeX; canvas.height = sizeY;
+
+            return context;
+        }
+        return null;
+    }
+
+    // ****************************************************************************************************************
+    // function:    getTexture
+    // ****************************************************************************************************************
+    // parameters:  sizeX - the size x override
+    // ****************************************************************************************************************
+    //              sizeY - the size y override
+    // ****************************************************************************************************************
+    //              wrapping - the wrapping
+    // ****************************************************************************************************************
+    // returns:     the texture
+    // ****************************************************************************************************************
+    public getTexture(sizeX: number = 0, sizeY: number = 0, wrapping: THREE.Wrapping = THREE.ClampToEdgeWrapping): THREE.Texture {
+
+        // ************************************************************************************************************
+        // copy across data
+        // ************************************************************************************************************
+
+        const context = this.createCanvas(this.sizeX, this.sizeY);
+
+        if (context) {
 
             context.putImageData(this.data, 0, 0);
 
+            // ********************************************************************************************************
+            // check whether resizing
+            // ********************************************************************************************************
+
+            if (sizeX || sizeY) {
+
+                const context2 = this.createCanvas(sizeX, sizeY);
+
+                if (context2) {
+
+                    context2.drawImage(context.canvas, 0, 0, sizeX, sizeY);
+
+                    return new THREE.CanvasTexture(context2.canvas, THREE.UVMapping, wrapping, wrapping);
+                }
+            }
             return new THREE.CanvasTexture(context.canvas, THREE.UVMapping, wrapping, wrapping);
         }
         return new THREE.Texture();

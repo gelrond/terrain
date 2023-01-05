@@ -1,5 +1,5 @@
 // ********************************************************************************************************************
-import { BufferGeometry, Material, MeshStandardMaterial, Texture, TextureLoader, Vector3 } from 'three';
+import { BufferGeometry, Material, MeshStandardMaterial, Texture, Vector3 } from 'three';
 // ********************************************************************************************************************
 import { GeometryBuilder } from '../geometry/geometry-builder';
 // ********************************************************************************************************************
@@ -72,9 +72,9 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
 
         if (this.root) {
 
-            const rootDx = this.root.max.x - this.root.min.x;
+            const rootDx = this.getRootDimensionsX();
 
-            const rootDy = this.root.max.y - this.root.min.y;
+            const rootDy = this.getRootDimensionsY();
 
             this.createGeometryInternal(builder, this.root.pointNw, rootDx, rootDy, ceiling);
         }
@@ -261,59 +261,86 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
     }
 
     // ****************************************************************************************************************
-    // function:    createMaterial
-    // ****************************************************************************************************************
-    // parameters:  n/a
-    // ****************************************************************************************************************
-    // returns:     the material
-    // ****************************************************************************************************************
-    public createMaterial(): Material {
-
-        const normalMap = this.createNormalMap();
-
-        const detailMap = new TextureLoader().load('/resources/detail.png');
-
-        const result = new MeshStandardMaterial({ roughness: 1.0, bumpMap: detailMap, map: detailMap, normalMap: normalMap, vertexColors: true, wireframe: false });
-
-        return result;
-    }
-
-    // ****************************************************************************************************************
-    // function:    createNormalMap
+    // function:    createMapColour
     // ****************************************************************************************************************
     // parameters:  size - the size
     // ****************************************************************************************************************
-    // returns:     the normal map
+    // returns:     the colour map
     // ****************************************************************************************************************
-    public createNormalMap(size: number = 64): Texture {
+    public createMapColour(size: number = 64): Texture {
 
         // ************************************************************************************************************
         // setup variables
         // ************************************************************************************************************
 
-        const canvas = new Canvas(size, size);
+        const rootDx = this.getRootDimensionsX();
 
-        const dx = this.pointNe.x - this.pointNw.x;
+        const rootDy = this.getRootDimensionsY();
 
-        const dy = this.pointSw.y - this.pointNw.y;
-
-        const ox = dx / size; const oy = dy / size;
+        const canvas = new Canvas(rootDx, rootDy);
 
         // ************************************************************************************************************
         // traverse pixels
         // ************************************************************************************************************
 
-        for (var x = 0; x < size; x++) {
+        for (var x = 0; x < rootDx; x++) {
 
-            for (var y = 0; y < size; y++) {
+            for (var y = 0; y < rootDy; y++) {
 
                 // ****************************************************************************************************
                 // obtain normal
                 // ****************************************************************************************************
 
-                const px = this.pointNw.x + (x * ox);
+                const px = this.pointNw.x + x;
 
-                const py = this.pointNw.y + (y * oy);
+                const py = this.pointNw.y + y;
+
+                // ****************************************************************************************************
+                // obtain colour
+                // ****************************************************************************************************
+
+                const colour = this.provider.getColour(px, py);
+
+                canvas.setPixel(x, y, colour);
+            }
+        }
+        return canvas.getTexture(size, size);
+    }
+
+    // ****************************************************************************************************************
+    // function:    createMapNormal
+    // ****************************************************************************************************************
+    // parameters:  size - the size
+    // ****************************************************************************************************************
+    // returns:     the normal map
+    // ****************************************************************************************************************
+    public createMapNormal(size: number = 64): Texture {
+
+        // ************************************************************************************************************
+        // setup variables
+        // ************************************************************************************************************
+
+        const rootDx = this.getRootDimensionsX();
+
+        const rootDy = this.getRootDimensionsY();
+
+        const canvas = new Canvas(rootDx, rootDy);
+
+        // ************************************************************************************************************
+        // traverse pixels
+        // ************************************************************************************************************
+
+        for (var x = 0; x < rootDx; x++) {
+
+            for (var y = 0; y < rootDy; y++) {
+
+                // ****************************************************************************************************
+                // obtain normal
+                // ****************************************************************************************************
+
+                const px = this.pointNw.x + x;
+
+                const py = this.pointNw.y + y;
 
                 const normal = this.provider.getNormal(px, py);
 
@@ -332,7 +359,25 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
                 canvas.setPixel(x, y, colour);
             }
         }
-        return canvas.getTexture();
+        return canvas.getTexture(size, size);
+    }
+
+    // ****************************************************************************************************************
+    // function:    createMaterial
+    // ****************************************************************************************************************
+    // parameters:  n/a
+    // ****************************************************************************************************************
+    // returns:     the material
+    // ****************************************************************************************************************
+    public createMaterial(): Material {
+
+        const mapColour = this.createMapColour();
+
+        const mapNormal = this.createMapNormal();
+
+        const result = new MeshStandardMaterial({ roughness: 0.9, map: mapColour, normalMap: mapNormal, vertexColors: false, wireframe: false });
+
+        return result;
     }
 
     // ****************************************************************************************************************
@@ -367,6 +412,38 @@ export class TerrainPatch extends Bounds2 implements IEquality<TerrainPatch> {
                 if (bounds.insideOrOnEdge(this.pointSe)) points.add(this.pointSe);
             }
         }
+    }
+
+    // ****************************************************************************************************************
+    // function:    getRootDimensionsX
+    // ****************************************************************************************************************
+    // parameters:  n/a
+    // ****************************************************************************************************************
+    // returns:     the root dimensions x
+    // ****************************************************************************************************************
+    private getRootDimensionsX(): number {
+
+        if (this.root) {
+
+            return this.root.max.x - this.root.min.x;
+        }
+        return 0;
+    }
+
+    // ****************************************************************************************************************
+    // function:    getRootDimensionsY
+    // ****************************************************************************************************************
+    // parameters:  n/a
+    // ****************************************************************************************************************
+    // returns:     the root dimensions y
+    // ****************************************************************************************************************
+    private getRootDimensionsY(): number {
+
+        if (this.root) {
+
+            return this.root.max.y - this.root.min.y;
+        }
+        return 0;
     }
 
     // ****************************************************************************************************************
