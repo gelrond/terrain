@@ -24,7 +24,10 @@ import { TerrainPatchGrid } from './code/terrain/terrain-patch-grid';
 import { TerrainProvider } from './code/terrain/terrain-provider';
 // ********************************************************************************************************************
 
-const usingGenerator: boolean = false;
+// ********************************************************************************************************************
+// generator
+// ********************************************************************************************************************
+const usingGenerator: boolean = true;
 
 // ********************************************************************************************************************
 // progress
@@ -65,7 +68,7 @@ var terrainGrid = new TerrainGeneratorSeed(progress).generate();
 
 if (usingGenerator) {
 
-    while (terrainGrid.sizeX < 512) {
+    while (terrainGrid.sizeX < 1024) {
 
         terrainGrid = new TerrainModifierUpscale(progress).modify(terrainGrid);
 

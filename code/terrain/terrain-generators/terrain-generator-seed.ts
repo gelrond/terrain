@@ -12,7 +12,7 @@ export class TerrainGeneratorSeed extends Generator<TerrainDataGrid> {
     // ****************************************************************************************************************
     // constructor
     // ****************************************************************************************************************
-    constructor(public readonly progress: IProgress, public readonly size: number = 16, public readonly coverage: number = 0.9, public readonly max: number = 1, public readonly min: number = 0.5, public readonly edge: number = 1) { super(); }
+    constructor(public readonly progress: IProgress, public readonly size: number = 8, public readonly coverage: number = 0.95, public readonly max: number = 1, public readonly min: number = 0.5, public readonly edge: number = 0) { super(); }
 
     // ****************************************************************************************************************
     // function:    generate

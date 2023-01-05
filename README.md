@@ -8,7 +8,7 @@ I wrote this to try and create a terrain system that was easy to use and extend.
 
 <a href="https://ibb.co/Wz1vpQk"><img src="https://i.ibb.co/7pFtNHn/screenshot-2.png" alt="screenshot-2" border="0"></a>
 
-<a href="https://ibb.co/5rTWHLt"><img src="https://i.ibb.co/GW7vSRB/screenshot-3.png" alt="screenshot-3" border="0"></a>
+<a href="https://ibb.co/Qrg0rx6"><img src="https://i.ibb.co/72fh20G/screenshot-3.png" alt="screenshot-3" border="0"></a>
 
 <h3>Installation</h3>
 
